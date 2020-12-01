@@ -4,11 +4,14 @@
 \alias{day01}
 \alias{find_2020_pair}
 \alias{find_2020_trio}
+\alias{find_2020_trio_alternative}
 \title{Day 01: Report Repair}
 \usage{
 find_2020_pair(x)
 
 find_2020_trio(x)
+
+find_2020_trio_alternative(x)
 }
 \arguments{
 \item{x}{some data}
@@ -76,6 +79,10 @@ Using the above example again, the three entries that sum to \code{2020} are
 
 In your expense report, \emph{what is the product of the three entries that
 sum to \code{2020}?}
+
+\strong{Extra notes}
+
+This problem is \href{https://en.wikipedia.org/wiki/3SUM}{3SUM} in disguise.
 }
 \examples{
 x <- c(1721, 979, 366, 299, 675, 1456)

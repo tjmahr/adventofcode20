@@ -62,6 +62,11 @@
 #' In your expense report, *what is the product of the three entries that
 #' sum to `2020`?*
 #'
+#'
+#' **Extra notes**
+#'
+#' This problem is [3SUM](https://en.wikipedia.org/wiki/3SUM) in disguise.
+#'
 #' @param x some data
 #' @return For Part One, `find_2020_pair(x)` returns the pair of numbers that
 #'   sum to 2020. For Part Two, `find_2020_trio(x)` returns the three numbers
@@ -104,5 +109,33 @@ find_2020_trio <- function(x) {
 find_pair_summing_to_n <- function(x, n) {
   pair <- x[(n - x) %in% x]
   pair
+}
+
+#' @rdname day01
+#' @export
+find_2020_trio_alternative <- function(x) {
+  x <- sort(x)
+
+  # On Twitter, @drob used outer()
+  # https://twitter.com/drob/status/1333650983726034946
+  # I'm curious about what outer() does here.
+
+  # 2020 = a + b + c
+  # 2020 - (a + b) = c
+
+  # Make a grid with all pairwise sums, for all a and b
+  g <- outer(x, x, "+")
+
+  # Make a grid with every 2020 - (a + b) = c
+  g_diff <- 2020 - g
+
+  # Find three of the original numbers in this grid
+  trio <- x[x %in% g_diff]
+
+  # Or as a one-liner
+  x[x %in% (2020 - outer(x, x, "+"))]
+
+  # So outer() here is a way to set up a grid of pairs. Then usually
+  # vectorized operations let us avoid loops.
 }
 
