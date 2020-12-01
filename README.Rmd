@@ -61,6 +61,27 @@ This recipe, called on day 1:
   - downloads the available puzzle description for day 1 into R/day01.R
   - puts the puzzle description into a roxygen documentation block
   - creates placeholder functions for the solutions to day 1
-  - creates a unit test for day
+  - creates a unit test for day (useful for the example in the puzzle
+    description)
   - creates a file to contain the solution for day 1
   - creates a file to hold the input for day 1
+
+## Constraints
+
+I have allowed myself to use:
+
+* base, stats, utils, tools, and so on: the base R packages
+* magrittr: for the pipe `%>%` syntax
+* rlang: for language and code evaluation
+* stringr: for regular-expression-related functions
+
+I've put my R source code under a GPL-3 license. It should not apply to the
+puzzle descriptions in the code comments at the top of each file. I did not
+write those descriptions.
+
+## Coding approaches 
+
+Here are the programming tasks and techniques I used for the various
+puzzles. 
+
+- 01a/b _Find subsets that sum to a value:_ Math. Filtering values.

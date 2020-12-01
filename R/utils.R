@@ -106,11 +106,11 @@ use_day <- function(day, year = 2020, open = interactive()) {
 convert_clipboard_html_to_roxygen_md <- function(input = clipr::read_clip()) {
   temp <- tempfile(fileext = ".html")
   writeLines(input, temp)
-  z <- knitr::pandoc(temp, "markdown", encoding = "UTF-8")
+  z <- knitr::pandoc(temp, "markdown")
   lines <- readr::read_lines(z)
   lines <- paste0("#' ", lines, collapse = "\n")
   clipr::write_clip(lines)
-  done("Roxygen markdown block is on the clipboard")
+  usethis::ui_done("Roxygen markdown block is on the clipboard")
   invisible(lines)
 }
 
