@@ -73,3 +73,4 @@ Here are the programming tasks and techniques I used for the various
 puzzles.
 
 -   01a/b *Find subsets that sum to a value:* Math. Filtering values.
+-   02a/b *Count characters in a string:* Regular expressions.
