@@ -26,3 +26,8 @@ read_text_lines <- function(x) {
 keep_if <- function(data, predicate) {
   Filter(predicate, data)
 }
+
+
+lapply2 <- function(x, y, f, ...) {
+  Map(f, x, y, ...)
+}
