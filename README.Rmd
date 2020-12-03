@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-These are my solutions to [Advent of Code 20202](http://adventofcode.com/2020), a series of 25 programming puzzles.
+These are my solutions to [Advent of Code 2020](http://adventofcode.com/2020), a series of 25 programming puzzles.
 
 ## Installation
 

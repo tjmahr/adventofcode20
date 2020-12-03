@@ -7,8 +7,7 @@
 <!-- badges: end -->
 
 These are my solutions to [Advent of Code
-20202](http://adventofcode.com/2020), a series of 25 programming
-puzzles.
+2020](http://adventofcode.com/2020), a series of 25 programming puzzles.
 
 ## Installation
 
