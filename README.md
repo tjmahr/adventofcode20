@@ -74,3 +74,5 @@ puzzles.
 
 -   01a/b *Find subsets that sum to a value:* Math. Filtering values.
 -   02a/b *Count characters in a string:* Regular expressions.
+-   03a/b *Count points visited in a repeating grid :* Math (modular
+    arithmetic).

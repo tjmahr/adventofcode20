@@ -86,4 +86,6 @@ puzzles.
 
 - 01a/b _Find subsets that sum to a value:_ Math. Filtering values.
 - 02a/b _Count characters in a string:_ Regular expressions.
+- 03a/b _Count points visited in a repeating grid :_ Math (modular arithmetic).
+
 

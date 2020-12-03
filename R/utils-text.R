@@ -13,21 +13,3 @@ read_text_lines <- function(x) {
     stringr::str_trim() %>%
     keep_if(function(x) x != "")
 }
-
-#' Filter values
-#'
-#' This function is [base::Filter()] with its arguments reversed.
-#'
-#' @param data a list to filter
-#' @param predicate a function for filtering items. Values that return `TRUE`
-#'   are kept.
-#' @return the items where the predicate function is `TRUE`
-#' @export
-keep_if <- function(data, predicate) {
-  Filter(predicate, data)
-}
-
-
-lapply2 <- function(x, y, f, ...) {
-  Map(f, x, y, ...)
-}
