@@ -126,15 +126,19 @@
 #' count_trees_visited(x, move_x = 3, move_y = 1)
 #' count_trees_visited(x, move_x = 1, move_y = 2)
 count_trees_visited <- function(x, move_x = 3, move_y = 1) {
+  # I originally used sums like `cumsum(c(1, rep(move_x, height - 1)))` for
+  # steps, but I think seq() will be clearer.
+
   # Find which x positions are visited
   width <- nchar(x[1])
   height <- length(x)
-  x_spots <- cumsum(c(1, rep(move_x, height - 1)))
+
+  y_spots <- seq(1, by = move_y, to = height)
+  x_spots <- seq(1, by = move_x, length.out = length(y_spots))
   x_spots_wrapped <- x_spots %% width
   x_spots_wrapped[x_spots_wrapped == 0] <- width
 
   # Find x positions of trees in each row visited
-  y_spots <- cumsum(c(1, rep(move_y, height - 1)))
   tree_spots <- which_spots_are_trees(x[y_spots])
 
   tree_count <- x_spots_wrapped %>%
