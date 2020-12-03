@@ -109,6 +109,10 @@ find_2020_trio <- function(x) {
 find_pair_summing_to_n <- function(x, n) {
   pair <- x[(n - x) %in% x]
   pair
+
+  # alternative by @mna99
+  # https://github.com/mnaR99/AdventOfCode2020/blob/main/R/Day-01.md
+  # intersect(x, n - x)
 }
 
 #' @rdname day01

@@ -6,7 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of adventofcode20 is to …
+These are my solutions to [Advent of Code
+20202](http://adventofcode.com/2020), a series of 25 programming
+puzzles.
 
 ## Installation
 
@@ -17,11 +19,12 @@ You can install adventofcode20 from [GitHub](https://github.com/) with:
 devtools::install_github("tjmahr/adventofcode20")
 ```
 
-But why would you do that?
+There is probably only one reason to install this package:
 
-## Templates
+### Templates
 
-The one thing you might want from this package are the templates:
+`use_day()` is a [usethis](https://usethis.r-lib.org/)-style function to
+create placeholder files for each day.
 
 ``` r
 use_day(1)
@@ -54,7 +57,22 @@ This recipe, called on day 1:
 -   creates a file to contain the solution for day 1
 -   creates a file to hold the input for day 1
 
-## Constraints
+## Package overview
+
+The `/R` folder contains the R functions I wrote for each day. I used
+some light test-driven development for the puzzles. That is, each puzzle
+description provides some example inputs and outputs. Before tackling
+the main test input, I write a unit-test in `/tests` that confirms that
+my solution can correctly reproduce the examples. The `/inst` directory
+contains the code to handle the main test input for each day.
+
+I limited the amount of package dependencies used for these puzzles to
+maximize future compatibility and to make sure that it is mostly *my
+code* that solves the problems. For example, if a puzzle requires
+answering questions about the data in a tree-like structure, it would be
+kind of cheating for me to find a library for building and traversing
+trees to tackle the problem. It’s *advent of code*, not *advent of
+load*.
 
 I have allowed myself to use:
 
@@ -74,5 +92,11 @@ puzzles.
 
 -   01a/b *Find subsets that sum to a value:* Math. Filtering values.
 -   02a/b *Count characters in a string:* Regular expressions.
--   03a/b *Count points visited in a repeating grid :* Math (modular
-    arithmetic).
+-   03a/b *Count points visited in a repeating grid:* Math (modular
+    arithmetic). Book-keeping.
+
+By “book-keeping”, I mean basic programming programming where I keep
+track of some changing state like a position in a vector.
+
+By “math”, I mean studying the problem and using math to find a shortcut
+that lets me skip some computations.
