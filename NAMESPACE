@@ -2,7 +2,9 @@
 
 export("%>%")
 export(aoc20_solutions)
+export(check_for_valid_passports)
 export(check_for_valid_passwords)
+export(check_for_valider_passports)
 export(check_for_valider_passwords)
 export(convert_clipboard_html_to_roxygen_md)
 export(count_trees_visited)

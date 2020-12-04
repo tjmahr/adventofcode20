@@ -4,18 +4,27 @@
 \alias{read_text_lines}
 \title{Split and trim new-line-delimited string of values}
 \usage{
-read_text_lines(x)
+read_text_lines(x, drop_empty = "all")
 }
 \arguments{
 \item{x}{a string with values separated by newlines}
+
+\item{drop_empty}{whether to remove empty items (\code{""}) from the results.
+Defaults to \code{"all"}. Other options are \code{"head/tail"} (drops blanks from
+start and end) and \code{"none"}.}
 }
 \value{
 a character vector of values split at newlines and with leading and
-trailing spaces removed
+trailing spaces removed.
 }
 \description{
-Split and trim new-line-delimited string of values
+THis function mimics some of the nice thing glue does with trimming. The
+option to keep internal blanks was added for puzzle 2020:04.
 }
 \examples{
 read_text_lines("a\n  b  \nc    ")
+
+read_text_lines("\n\na\n  b  \n\nc    \n\n", drop_empty = "none")
+read_text_lines("\n\na\n  b  \n\nc    \n\n", drop_empty = "all")
+read_text_lines("\n\na\n  b  \n\nc    \n\n", drop_empty = "head/tail")
 }

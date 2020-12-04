@@ -93,9 +93,11 @@ puzzles.
 -   02a/b *Count characters in a string:* Regular expressions.
 -   03a/b *Count points visited in a repeating grid:* Math (modular
     arithmetic). Book-keeping.
+-   04a/b *Validating data:* Functional programming. Nonstandard
+    evaluation.
 
-By “book-keeping”, I mean basic programming programming where I keep
-track of some changing state like a position in a vector.
+By “book-keeping”, I mean basic programming where I keep track of some
+changing state like a position in a vector.
 
 By “math”, I mean studying the problem and using math to find a shortcut
 that lets me skip some computations.
