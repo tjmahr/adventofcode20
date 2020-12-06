@@ -96,6 +96,8 @@ puzzles.
 -   04a/b *Validating data:* Functional programming. Nonstandard
     evaluation.
 -   05a/b *Find missing value in binary sequence:* Math (binary, sets).
+-   06a/b *Find unique/shared letters in words over various sentences:*
+    Functional programming.
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.

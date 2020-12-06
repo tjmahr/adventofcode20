@@ -11,48 +11,48 @@
 #' much larger plane, [customs declaration
 #' forms](https://en.wikipedia.org/wiki/Customs_declaration) are
 #' distributed to the passengers.
-#' 
+#'
 #' The form asks a series of 26 yes-or-no questions marked `a` through `z`.
 #' All you need to do is identify the questions for which *anyone in your
 #' group* answers \"yes\". Since your group is just you, this doesn\'t take
 #' very long.
-#' 
+#'
 #' However, the person sitting next to you seems to be experiencing a
 #' language barrier and asks if you can help. For each of the people in
 #' their group, you write down the questions for which they answer \"yes\",
 #' one per line. For example:
-#' 
+#'
 #'     abcx
 #'     abcy
 #'     abcz
-#' 
+#'
 #' In this group, there are *`6`* questions to which anyone answered
 #' \"yes\": `a`, `b`, `c`, `x`, `y`, and `z`. (Duplicate answers to the
 #' same question don\'t count extra; each question counts at most once.)
-#' 
+#'
 #' Another group asks for your help, then another, and eventually you\'ve
 #' collected answers from every group on the plane (your puzzle input).
 #' Each group\'s answers are separated by a blank line, and within each
 #' group, each person\'s answers are on a single line. For example:
-#' 
+#'
 #'     abc
-#' 
+#'
 #'     a
 #'     b
 #'     c
-#' 
+#'
 #'     ab
 #'     ac
-#' 
+#'
 #'     a
 #'     a
 #'     a
 #'     a
-#' 
+#'
 #'     b
-#' 
+#'
 #' This list represents answers from five groups:
-#' 
+#'
 #' -   The first group contains one person who answered \"yes\" to *`3`*
 #'     questions: `a`, `b`, and `c`.
 #' -   The second group contains three people; combined, they answered
@@ -63,36 +63,101 @@
 #'     \"yes\" to only *`1`* question, `a`.
 #' -   The last group contains one person who answered \"yes\" to only
 #'     *`1`* question, `b`.
-#' 
+#'
 #' In this example, the sum of these counts is `3 + 3 + 3 + 1 + 1` =
 #' *`11`*.
-#' 
+#'
 #' For each group, count the number of questions to which anyone answered
 #' \"yes\". *What is the sum of those counts?*
 #'
 #' **Part Two**
 #'
-#' *(Use have to manually add this yourself.)*
+#' As you finish the last group\'s customs declaration, you notice that
+#' [you misread one
+#' word]{title="Don't worry, nobody ever misreads just one word in real life."}
+#' in the instructions:
 #'
-#' *(Try using `convert_clipboard_html_to_roxygen_md()`)*
+#' You don\'t need to identify the questions to which *anyone* answered
+#' \"yes\"; you need to identify the questions to which *everyone* answered
+#' \"yes\"!
+#'
+#' Using the same example as above:
+#'
+#'     abc
+#'
+#'     a
+#'     b
+#'     c
+#'
+#'     ab
+#'     ac
+#'
+#'     a
+#'     a
+#'     a
+#'     a
+#'
+#'     b
+#'
+#' This list represents answers from five groups:
+#'
+#' -   In the first group, everyone (all 1 person) answered \"yes\" to
+#'     *`3`* questions: `a`, `b`, and `c`.
+#' -   In the second group, there is *no* question to which everyone
+#'     answered \"yes\".
+#' -   In the third group, everyone answered yes to only *`1`* question,
+#'     `a`. Since some people did not answer \"yes\" to `b` or `c`, they
+#'     don\'t count.
+#' -   In the fourth group, everyone answered yes to only *`1`* question,
+#'     `a`.
+#' -   In the fifth group, everyone (all 1 person) answered \"yes\" to
+#'     *`1`* question, `b`.
+#'
+#' In this example, the sum of these counts is `3 + 0 + 1 + 1 + 1` = *`6`*.
+#'
+#' For each group, count the number of questions to which *everyone*
+#' answered \"yes\". *What is the sum of those counts?*
 #'
 #' @param x some data
 #' @return For Part One, `f06a(x)` returns .... For Part Two,
 #'   `f06b(x)` returns ....
 #' @export
 #' @examples
-#' f06a()
-#' f06b()
-f06a <- function(x) {
-
+#' x <- read_text_lines(
+#'   drop_empty = "head/tail",
+#'   x = "
+#'   abc
+#'
+#'   a
+#'   b
+#'   c
+#'
+#'   ab
+#'   ac
+#'
+#'   a
+#'   a
+#'   a
+#'   a
+#'
+#'   b
+#'   "
+#' )
+#' find_unique_questions(x)
+#' find_shared_questions(x)
+find_unique_questions <- function(x) {
+  x %>%
+    group_at_empty_lines() %>%
+    lapply(strsplit, "") %>%
+    lapply(unlist) %>%
+    lapply(unique)
 }
 
 #' @rdname day06
 #' @export
-f06b <- function(x) {
-
-}
-
-f06_helper <- function(x) {
-
+find_shared_questions <- function(x) {
+  x %>%
+    group_at_empty_lines() %>%
+    lapply(strsplit, "") %>%
+    lapply(function(x) Reduce(intersect, x))
 }

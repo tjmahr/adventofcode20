@@ -36,3 +36,11 @@ read_text_lines <- function(x, drop_empty = "all") {
   }
   lines
 }
+
+
+group_at_empty_lines <- function(x) {
+  x %>%
+    split(cumsum(x == "")) %>%
+    lapply(keep_if, function(x) x != "") %>%
+    unname()
+}

@@ -2,13 +2,13 @@
 % Please edit documentation in R/day06.R
 \name{day06}
 \alias{day06}
-\alias{f06a}
-\alias{f06b}
+\alias{find_unique_questions}
+\alias{find_shared_questions}
 \title{Day 06: Custom Customs}
 \usage{
-f06a(x)
+find_unique_questions(x)
 
-f06b(x)
+find_shared_questions(x)
 }
 \arguments{
 \item{x}{some data}
@@ -85,11 +85,73 @@ For each group, count the number of questions to which anyone answered
 
 \strong{Part Two}
 
-\emph{(Use have to manually add this yourself.)}
+As you finish the last group\'s customs declaration, you notice that
+[you misread one
+word]{title="Don't worry, nobody ever misreads just one word in real life."}
+in the instructions:
 
-\emph{(Try using \code{convert_clipboard_html_to_roxygen_md()})}
+You don\'t need to identify the questions to which \emph{anyone} answered
+\"yes\"; you need to identify the questions to which \emph{everyone} answered
+\"yes\"!
+
+Using the same example as above:\preformatted{abc
+
+a
+b
+c
+
+ab
+ac
+
+a
+a
+a
+a
+
+b
+}
+
+This list represents answers from five groups:
+\itemize{
+\item In the first group, everyone (all 1 person) answered \"yes\" to
+\emph{\code{3}} questions: \code{a}, \code{b}, and \code{c}.
+\item In the second group, there is \emph{no} question to which everyone
+answered \"yes\".
+\item In the third group, everyone answered yes to only \emph{\code{1}} question,
+\code{a}. Since some people did not answer \"yes\" to \code{b} or \code{c}, they
+don\'t count.
+\item In the fourth group, everyone answered yes to only \emph{\code{1}} question,
+\code{a}.
+\item In the fifth group, everyone (all 1 person) answered \"yes\" to
+\emph{\code{1}} question, \code{b}.
+}
+
+In this example, the sum of these counts is \code{3 + 0 + 1 + 1 + 1} = \emph{\code{6}}.
+
+For each group, count the number of questions to which \emph{everyone}
+answered \"yes\". \emph{What is the sum of those counts?}
 }
 \examples{
-f06a()
-f06b()
+x <- read_text_lines(
+  drop_empty = "head/tail",
+  x = "
+  abc
+
+  a
+  b
+  c
+
+  ab
+  ac
+
+  a
+  a
+  a
+  a
+
+  b
+  "
+)
+find_unique_questions(x)
+find_shared_questions(x)
 }
