@@ -95,6 +95,7 @@ puzzles.
     arithmetic). Book-keeping.
 -   04a/b *Validating data:* Functional programming. Nonstandard
     evaluation.
+-   05a/b *Find missing value in binary sequence:* Math (binary, sets).
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.
