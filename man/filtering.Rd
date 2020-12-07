@@ -2,19 +2,28 @@
 % Please edit documentation in R/utils-functional.R
 \name{keep_if}
 \alias{keep_if}
+\alias{drop_if_has_name}
 \title{Filter values}
 \usage{
 keep_if(data, predicate)
+
+drop_if_has_name(data, names)
 }
 \arguments{
 \item{data}{a list to filter}
 
 \item{predicate}{a function for filtering items. Values that return \code{TRUE}
 are kept.}
+
+\item{names}{names to control filtering.}
 }
 \value{
-the items where the predicate function is \code{TRUE}
+the items where the predicate function is \code{TRUE} or items that match
+the name selection.
 }
 \description{
-This function is \code{\link[base:funprog]{base::Filter()}} with its arguments reversed.
+These are simple functions for filtering data.
+}
+\details{
+\code{keep_if()} is \code{\link[base:funprog]{base::Filter()}} with its arguments reversed.
 }

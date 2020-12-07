@@ -98,9 +98,24 @@ puzzles.
 -   05a/b *Find missing value in binary sequence:* Math (binary, sets).
 -   06a/b *Find unique/shared letters in words over various sentences:*
     Functional programming.
+-   07a/b *Find how many bags are contained in other bags (tree
+    traversal):* Domain specific language.
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.
 
 By “math”, I mean studying the problem and using math to find a shortcut
 that lets me skip some computations.
+
+## Helpful builtin R functions
+
+Here are some functions that have I discovered, rediscovered, or
+otherwise appreciate somewhat more from these exercises:
+
+-   [`complete.cases()`](https://rdrr.io/r/stats/complete.cases.html)
+-   [`intersect()`](https://rdrr.io/r/base/sets.html)
+-   [`lengths()`](https://rdrr.io/r/base/lengths.html)
+-   [`modifyList()`](https://rdrr.io/r/utils/modifyList.html)
+-   [`outer()`](https://rdrr.io/r/base/outer.html)
+-   [`prod()`](https://rdrr.io/r/base/prod.html)
+-   [`strtoi()`](https://rdrr.io/r/base/strtoi.html)

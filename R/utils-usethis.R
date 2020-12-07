@@ -33,11 +33,9 @@
 #' code no longer obtains the same solution.
 #' @export
 use_day <- function(day, year = 2020, open = interactive()) {
-  if (!requireNamespace("usethis", quietly = TRUE)) {
-    stop("please install the usethis package")
-  }
 
-  this_package <- "adventofcode20"
+  year_short <- substr(year, 3, 4)
+  this_package <- paste0("adventofcode", year_short)
 
   url <- sprintf("https://adventofcode.com/%s/day/%s", year, day)
 
@@ -109,10 +107,6 @@ use_day <- function(day, year = 2020, open = interactive()) {
 #' @export
 #' @param input html code copied from the Advent of Code website
 convert_clipboard_html_to_roxygen_md <- function(input = clipr::read_clip()) {
-  if (!requireNamespace("clipr", quietly = TRUE)) {
-    stop("please install the clipr package")
-  }
-
   temp <- tempfile(fileext = ".html")
   writeLines(input, temp)
   z <- knitr::pandoc(temp, "markdown")

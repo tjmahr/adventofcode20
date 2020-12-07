@@ -15,16 +15,16 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
     testthat,
-    roxygen2,
-    usethis,
-    knitr,
-    readr,
-    xml2,
-    glue,
-    crayon,
-    clisymbols,
-    clipr
+    roxygen2
 Imports: 
     magrittr,
     stringr,
-    rlang (>= 0.1.2)
+    rlang (>= 0.1.2),
+    usethis,
+    knitr,
+    clisymbols,
+    crayon,
+    readr,
+    xml2,
+    glue,
+    clipr

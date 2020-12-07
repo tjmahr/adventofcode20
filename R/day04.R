@@ -223,6 +223,8 @@
 check_for_valid_passports <- function(x) {
   y <- parse_passport_lines(x)
   y[["cid"]] <- NULL
+
+  # stats::complete_cases() also works
   unname(apply(y, 1, Negate(anyNA)))
 }
 
