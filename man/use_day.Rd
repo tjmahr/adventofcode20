@@ -12,6 +12,8 @@ convert_clipboard_html_to_roxygen_md(input = clipr::read_clip())
 \arguments{
 \item{day}{integer giving the day}
 
+\item{year}{year of Advent of Code containing the day. Defaults to 2020.}
+
 \item{open}{whether to open the created files. Defaults to \code{TRUE} in an
 interactive R session.}
 

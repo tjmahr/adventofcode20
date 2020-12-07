@@ -1,6 +1,7 @@
 #' Create the files for an Advent of Code day
 #'
 #' @param day integer giving the day
+#' @param year year of Advent of Code containing the day. Defaults to 2020.
 #' @param open whether to open the created files. Defaults to `TRUE` in an
 #'   interactive R session.
 #' @return `use_day()` returns `NULL`. `convert_clipboard_html_to_roxygen_md()`

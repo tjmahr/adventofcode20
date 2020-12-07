@@ -101,5 +101,4 @@ Your seat wasn\'t at the very front or back, though; the seats with IDs
 \examples{
 x <- c("FBFBBFFRLR", "BFFFBBFRRR", "FFFBBBFRRR", "BBFFBBFRLL")
 convert_seat_string_to_number(x)
-f05b()
 }

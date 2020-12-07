@@ -91,7 +91,6 @@
 #' @examples
 #' x <- c("FBFBBFFRLR", "BFFFBBFRRR", "FFFBBBFRRR", "BBFFBBFRLL")
 #' convert_seat_string_to_number(x)
-#' f05b()
 convert_seat_string_to_number <- function(x) {
   b <- x %>%
     stringr::str_replace_all("F|L", "0") %>%
