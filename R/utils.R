@@ -13,7 +13,7 @@
 #' Creates a file for writing the functions to solve the problem: `R/dayxx.R`.
 #' The text of the challenge is downloaded and inserted into the roxygen block.
 #' One caveat is that you will have to manually add the markdown text for Part
-#' Two yourself. BYou can use `convert_clipboard_html_to_roxygen_md()` to make
+#' Two yourself. You can use `convert_clipboard_html_to_roxygen_md()` to make
 #' this easier. Once you can read the description, view the page source, copy
 #' the html for that part of the problem. Run this function to create a Roxygen
 #' version of the HTML.

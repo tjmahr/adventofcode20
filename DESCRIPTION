@@ -1,13 +1,13 @@
 Package: adventofcode20
-Title: What the Package Does (One Line, Title Case)
+Title: Advent of Code 2020
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Authors@R: c(
+  person("Tristan", "Mahr", , "tristan.mahr@gmail.com", c("aut", "cre")),
+  person("Eric", "Wastl", role = c("ctb"), 
+  comment = "Created puzzles and descriptions that appear in documentation.")
+  )
+Description: Advent of Code is an annual series of a programming puzzles. 
+  This package contains solutions for the 2020 iteration written in R.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
