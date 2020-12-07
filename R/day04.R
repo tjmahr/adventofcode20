@@ -220,7 +220,6 @@
 #'
 #' check_for_valider_passports(x_good)
 #' check_for_valider_passports(x_bad)
-#'
 check_for_valid_passports <- function(x) {
   y <- parse_passport_lines(x)
   y[["cid"]] <- NULL
@@ -292,8 +291,7 @@ parse_passport_lines <- function(x) {
 
   # Let's try not using any regular expressions
   results <- x %>%
-    # Group at the blank lines
-    split(cumsum(x == "")) %>%
+    group_at_empty_lines() %>%
     # Separate fields at spaces
     lapply(strsplit, " ") %>%
     lapply(unlist) %>%
@@ -305,10 +303,10 @@ parse_passport_lines <- function(x) {
         unlist(recursive = FALSE)
     }) %>%
     # Fill in missing fields with NAs
-    lapply(function(x) modifyList(prototype, x)) %>%
+    lapply(function(x) utils::modifyList(prototype, x)) %>%
     # Create a dataframe
     lapply(as.data.frame) %>%
-    do.call(rbind, .)
+    invoke_call(rbind)
 
   results["passport"] <- seq_len(nrow(results))
   results[c(9, 1:8)]

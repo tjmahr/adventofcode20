@@ -26,3 +26,8 @@ keep_if <- function(data, predicate) {
 lapply2 <- function(x, y, f, ...) {
   Map(f, x, y, ...)
 }
+
+invoke_call <- function(args, what, ...) {
+  do.call(what, args, ...)
+}
+

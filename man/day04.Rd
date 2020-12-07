@@ -231,5 +231,4 @@ x_bad <- read_text_lines(x_bad, drop_empty = "head/tail")
 
 check_for_valider_passports(x_good)
 check_for_valider_passports(x_bad)
-
 }
