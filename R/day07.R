@@ -192,7 +192,7 @@ parse_bag_rule_to_function <- function(rule, repetitions = TRUE) {
     stringr::str_remove_all("\\d+ ") %>%
     stringr::str_replace_all(" ", "_")
 
-  body <- expr(c(!!! lapply(calls, rlang::call2), !! this_color))
+  body <- expr(c(!! this_color, !!! lapply(calls, rlang::call2)))
 
   list(
     f_name = this_function,
