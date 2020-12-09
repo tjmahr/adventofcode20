@@ -36,3 +36,11 @@ f{{{ dd_number }}}b <- function(x) {
 f{{{ dd_number }}}_helper <- function(x) {
 
 }
+
+#' @rdname day{{{ dd_number }}}
+#' @export
+example_data_{{{ dd_number }}} <- function() {
+  c(
+
+  )
+}

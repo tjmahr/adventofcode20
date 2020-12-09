@@ -100,6 +100,8 @@ puzzles.
     Functional programming.
 -   07a/b *Find how many bags are contained in other bags (tree
     traversal):* Domain specific language.
+-   08a/b *Determining whether a simple program loops forever or
+    terminates:* Object-orienting programming.
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.
