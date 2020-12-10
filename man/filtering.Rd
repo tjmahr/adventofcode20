@@ -12,8 +12,8 @@ drop_if_has_name(data, names)
 \arguments{
 \item{data}{a list to filter}
 
-\item{predicate}{a function for filtering items. Values that return \code{TRUE}
-are kept.}
+\item{predicate}{a predicate function for filtering items. Values that return
+\code{TRUE} are kept.}
 
 \item{names}{names to control filtering.}
 }

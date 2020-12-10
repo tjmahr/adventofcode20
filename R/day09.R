@@ -84,26 +84,121 @@
 #'
 #' **Part Two**
 #'
-#' *(Use have to manually add this yourself.)*
+#' The final step in breaking the XMAS encryption relies on the invalid
+#' number you just found: you must *find a contiguous set of at least two
+#' numbers* in your list which sum to the invalid number from step 1.
 #'
-#' *(Try using `convert_clipboard_html_to_roxygen_md()`)*
+#' Again consider the above example:
 #'
-#' @param x some data
-#' @return For Part One, `f09a(x)` returns .... For Part Two,
-#'   `f09b(x)` returns ....
+#'     35
+#'     20
+#'     15
+#'     25
+#'     47
+#'     40
+#'     62
+#'     55
+#'     65
+#'     95
+#'     102
+#'     117
+#'     150
+#'     182
+#'     127
+#'     219
+#'     299
+#'     277
+#'     309
+#'     576
+#'
+#' In this list, adding up all of the numbers from `15` through `40`
+#' produces the invalid number from step 1, `127`. (Of course, the
+#' contiguous set of numbers in your actual list might be much longer.)
+#'
+#' To find the *encryption weakness*, add together the *smallest* and
+#' *largest* number in this contiguous range; in this example, these are
+#' `15` and `47`, producing *`62`*.
+#'
+#' *What is the encryption weakness in your XMAS-encrypted list of
+#' numbers?*
+#'
+#' @param x Vector of preamble numbers.
+#' @param window_size size of the window for the summing rule.
+#' @param target number to find the sum of in Part Two.
+#' @return For Part One, `find_xmas_preamble_mismatch()` the first item in `x`
+#'   where the previous `window_size` numbers do not contain a pair that sums to
+#'   `x`. For Part Two, `find_summing_streak(x)` returns the streak of numbers
+#'   that sum to `target`.
 #' @export
 #' @examples
-#' f09a()
-#' f09b()
-f09a <- function(x) {
+#' x <- example_xmas_preamble()
+#' result <- find_xmas_preamble_mismatch(x, 5)
+#' find_summing_streak(x, result)
+find_xmas_preamble_mismatch <- function(x, window_size) {
+  # Generate subsets of window_size-length numbers
+  windows <- x %>%
+    shingle(window_size) %>%
+    # Don't need the last one
+    utils::head(-1)
 
+  # Numbers that follow each subset
+  to_check <- x[seq(window_size + 1, length(x))]
+
+  first_failure <- to_check %>%
+    find_value2(
+      windows,
+      function(n, x) !has_pair_summing_to_n(unlist(x), n)
+    )
+
+  first_failure[[1]]
 }
+
+
+has_pair_summing_to_n <- function(x, n) {
+  grid <- outer(x, x, "+")
+  # We need a pair of numbers that sum to n.
+  # We don't want (1, 2, 3) to find (2, 2) for 4
+  n %in% grid[lower.tri(grid)]
+}
+
 
 #' @rdname day09
 #' @export
-f09b <- function(x) {
+find_summing_streak <- function(x, target) {
+  # trim off impossible values
+  edge <- find_position(x, function(x) x < target, .dir = "backward")
+  x2 <- x[-seq(edge + 1, to = length(x), by = 1)]
 
+  # try progressively larger windows
+  not_found <- TRUE
+  size <- 2
+  while (not_found) {
+    find_result <- x2 %>%
+      shingle(size) %>%
+      find_value(function(x) sum(unlist(x)) == target)
+
+    if (is.null(find_result)) {
+      size <- size + 1
+    } else (
+      not_found <- FALSE
+    )
+
+    if (size > length(x2)) stop("No matching sequence")
+  }
+
+  find_result
 }
+
+
+shingle <- function(x, size) {
+  index_starts <- seq(1, length(x) - size + 1)
+  index_ends <- index_starts + size - 1
+
+  index_starts %>%
+    lapply2(index_ends, seq) %>%
+    lapply(function(i) x[i])
+}
+
 
 #' @rdname day09
 #' @export

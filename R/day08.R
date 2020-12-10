@@ -196,6 +196,7 @@ check_boot_lines <- function(x) {
 }
 
 
+#' @param code boot code instructions.
 #' @param acc_value_start starting value for the accumulator. Defaults to 0.
 #' @param line_start startning instruction number. Defaults to 1.
 #' @rdname day08
@@ -210,7 +211,7 @@ setup_boot_loader <- function(code, acc_value_start = 0, line_start = 1) {
   acc_stream <- c()
   line_stream <- c()
   code_history <- rep(FALSE, length(code))
-  terminated <<- FALSE
+  terminated <- FALSE
 
   # execution history functions
   see_instruction <- function() {

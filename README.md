@@ -102,6 +102,8 @@ puzzles.
     traversal):* Domain specific language.
 -   08a/b *Determining whether a simple program loops forever or
     terminates:* Object-orienting programming.
+-   09a/b *Find sequences of numbers that do or do not sum to a value:*
+    Functional programming.
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.
@@ -121,3 +123,5 @@ otherwise appreciate somewhat more from these exercises:
 -   [`outer()`](https://rdrr.io/r/base/outer.html)
 -   [`prod()`](https://rdrr.io/r/base/prod.html)
 -   [`strtoi()`](https://rdrr.io/r/base/strtoi.html)
+-   [`chartr()`](https://rdrr.io/r/base/chartr.html)
+-   [`Find() and Position()`](https://rdrr.io/r/base/funprog.html)

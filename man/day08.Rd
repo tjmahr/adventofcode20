@@ -19,6 +19,8 @@ example_boot_code()
 \arguments{
 \item{x}{boot code instructions}
 
+\item{code}{boot code instructions.}
+
 \item{acc_value_start}{starting value for the accumulator. Defaults to 0.}
 
 \item{line_start}{startning instruction number. Defaults to 1.}

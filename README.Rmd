@@ -112,6 +112,8 @@ Here are the programming tasks and techniques I used for the various puzzles.
     Domain specific language.
   - 08a/b *Determining whether a simple program loops forever or terminates:* 
     Object-orienting programming.
+  - 09a/b *Find sequences of numbers that do or do not sum to a value:* 
+    Functional programming.
 
 By "book-keeping", I mean basic programming where I keep track of
 some changing state like a position in a vector.
@@ -133,4 +135,6 @@ appreciate somewhat more from these exercises:
   - [`outer()`](`r downlit::href_topic("outer")`)
   - [`prod()`](`r downlit::href_topic("prod")`)
   - [`strtoi()`](`r downlit::href_topic("strtoi")`)
+  - [`chartr()`](`r downlit::href_topic("chartr")`)
+  - [`Find() and Position()`](`r downlit::href_topic("Find")`)
 

@@ -92,9 +92,16 @@
 #' x <- c("FBFBBFFRLR", "BFFFBBFRRR", "FFFBBBFRRR", "BBFFBBFRLL")
 #' convert_seat_string_to_number(x)
 convert_seat_string_to_number <- function(x) {
+  # originally used
+  # stringr::str_replace_all(x, "F|L", "0")
+  # stringr::str_replace_all(x, "R|B", "1")
+
+  chartr2 <- function(x, old, new) chartr(old, new, x)
   b <- x %>%
-    stringr::str_replace_all("F|L", "0") %>%
-    stringr::str_replace_all("R|B", "1") %>%
+    chartr2("F", "0") %>%
+    chartr2("L", "0") %>%
+    chartr2("R", "1") %>%
+    chartr2("B", "1") %>%
     strtoi(base = 2)
   b
 }
