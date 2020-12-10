@@ -751,7 +751,7 @@
     },
     "rsthemes": {
       "Package": "rsthemes",
-      "Version": "0.2.0",
+      "Version": "0.2.1",
       "Source": "GitHub",
       "Remotes": "hrbrmstr/ipapi",
       "RemoteType": "github",
@@ -759,8 +759,8 @@
       "RemoteRepo": "rsthemes",
       "RemoteUsername": "gadenbuie",
       "RemoteRef": "HEAD",
-      "RemoteSha": "f8fdc4d9aca90dbed9b0f62a126d67284fbede7e",
-      "Hash": "b3b9ac1992eab014034bacc34f3e1baa"
+      "RemoteSha": "6ddfd033a399864193481fad112dbd955627e43b",
+      "Hash": "c2a0ee2c832cea0cf0be0220499232e6"
     },
     "rstudioapi": {
       "Package": "rstudioapi",
