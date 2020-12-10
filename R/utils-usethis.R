@@ -4,6 +4,8 @@
 #' @param year year of Advent of Code containing the day. Defaults to 2020.
 #' @param open whether to open the created files. Defaults to `TRUE` in an
 #'   interactive R session.
+#' @param cookie whether to try to download personalized page results using an
+#'   Advent of Code cookie
 #' @return `use_day()` returns `NULL`. `convert_clipboard_html_to_roxygen_md()`
 #'   invisibly returns the Roxygen markdown block. It also copies Roxygen
 #'   markdown block onto the clipboard.
@@ -32,8 +34,7 @@
 #' can load in your previous answer, rerun your solution, and check whether your
 #' code no longer obtains the same solution.
 #' @export
-use_day <- function(day, year = 2020, open = interactive()) {
-
+use_day <- function(day, year = 2020, open = interactive(), cookie = TRUE) {
   year_short <- substr(year, 3, 4)
   this_package <- paste0("adventofcode", year_short)
 
@@ -48,8 +49,8 @@ use_day <- function(day, year = 2020, open = interactive()) {
 
   files <- get_day_files(day)
   test_name <- sprintf("day%s", data$dd_number)
+  page <- get_aoc_html(url)
 
-  page <- xml2::read_html(url)
   article <- xml2::xml_find_first(page, "/html/body/main/article")
 
   title <- xml2::xml_find_first(page, "/html/body/main/article/h2")
@@ -75,13 +76,15 @@ use_day <- function(day, year = 2020, open = interactive()) {
   )
   todo("Write your solution code here")
   todo(
-    "Once you unlock Part Two, update the Roxygen block with the description")
+    "Once you unlock Part Two, update the Roxygen block with the description"
+  )
 
+  input_data <- get_aoc_input(day, year, cookie)
   usethis::use_template(
     "input.txt",
     save_as = files$input,
     package = this_package,
-    data = list(x = "\n"),
+    data = list(x = input_data),
     open = open
   )
   todo("Copy your problem input into this file")
@@ -102,6 +105,61 @@ use_day <- function(day, year = 2020, open = interactive()) {
 
   invisible(NULL)
 }
+
+
+get_aoc_html <- function(url, cookie = TRUE) {
+  if (file.exists(".aoccookie") && cookie) {
+    message("downloading puzzle html using .aoccookie")
+    cookie <- readLines(".aoccookie")
+    h <- curl::new_handle()
+    h <- curl::handle_setheaders(h, Cookie = cookie)
+    r <- curl::curl_fetch_memory(url, handle = h)
+    page <- xml2::read_html(r$content)
+  } else {
+    page <- xml2::read_html(url)
+  }
+  page
+}
+
+
+get_aoc_input <- function(day, year, cookie = TRUE) {
+  url <- sprintf("https://adventofcode.com/%s/day/%s/%s", year, day, "input")
+
+  if (file.exists(".aoccookie") && cookie) {
+    message("downloading puzzle input using .aoccookie")
+    cookie <- readLines(".aoccookie")
+    h <- curl::new_handle()
+    h <- curl::handle_setheaders(h, Cookie = cookie)
+    r <- curl::curl_fetch_memory(url, handle = h)
+    result <- rawToChar(r$content)
+  } else {
+    result <- "\n"
+  }
+
+  result
+}
+
+
+#' @rdname use_day
+#' @export
+download_part2_to_roxygen_md <- function(day, year = 2020, cookie = TRUE) {
+  url <- sprintf("https://adventofcode.com/%s/day/%s", year, day)
+  page <- get_aoc_html(url, cookie = cookie)
+
+  article <- xml2::xml_find_all(page, "/html/body/main/article")[[2]]
+
+  temp <- tempfile(fileext = ".html")
+  xml2::write_html(article, temp)
+  z <- knitr::pandoc(temp, "markdown")
+  lines <- readr::read_lines(z, skip = 1)
+  lines[1] <- "**Part Two**"
+  lines <- paste0("#' ", lines, collapse = "\n")
+  clipr::write_clip(lines)
+  usethis::ui_done("Roxygen markdown block is on the clipboard")
+  cat(paste(lines, "\n"))
+  invisible(lines)
+}
+
 
 #' @rdname use_day
 #' @export

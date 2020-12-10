@@ -2,10 +2,13 @@
 % Please edit documentation in R/utils-usethis.R
 \name{use_day}
 \alias{use_day}
+\alias{download_part2_to_roxygen_md}
 \alias{convert_clipboard_html_to_roxygen_md}
 \title{Create the files for an Advent of Code day}
 \usage{
-use_day(day, year = 2020, open = interactive())
+use_day(day, year = 2020, open = interactive(), cookie = TRUE)
+
+download_part2_to_roxygen_md(day, year = 2020, cookie = TRUE)
 
 convert_clipboard_html_to_roxygen_md(input = clipr::read_clip())
 }
@@ -16,6 +19,9 @@ convert_clipboard_html_to_roxygen_md(input = clipr::read_clip())
 
 \item{open}{whether to open the created files. Defaults to \code{TRUE} in an
 interactive R session.}
+
+\item{cookie}{whether to try to download personalized page results using an
+Advent of Code cookie}
 
 \item{input}{html code copied from the Advent of Code website}
 }
