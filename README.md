@@ -104,6 +104,8 @@ puzzles.
     terminates:* Object-orienting programming.
 -   09a/b *Find sequences of numbers that do or do not sum to a value:*
     Functional programming.
+-   10a/b *Count subsets of numbers that keep the gap between successive
+    numbers less than or equal to 3:* Math.
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.

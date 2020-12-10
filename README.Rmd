@@ -18,7 +18,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-These are my solutions to [Advent of Code 2020](http://adventofcode.com/2020), a series of 25 programming puzzles.
+These are my solutions to [Advent of Code 2020](http://adventofcode.com/2020), a
+series of 25 programming puzzles.
 
 ## Installation
 
@@ -112,8 +113,10 @@ Here are the programming tasks and techniques I used for the various puzzles.
     Domain specific language.
   - 08a/b *Determining whether a simple program loops forever or terminates:* 
     Object-orienting programming.
-  - 09a/b *Find sequences of numbers that do or do not sum to a value:* 
+  - 09a/b *Find sequences of numbers that do or do not sum to a value:*
     Functional programming.
+  - 10a/b *Count subsets of numbers that keep the gap between successive numbers
+    less than or equal to 3:* Math.
 
 By "book-keeping", I mean basic programming where I keep track of
 some changing state like a position in a vector.
