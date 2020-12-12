@@ -108,14 +108,21 @@ find_position <- function(
 #' This function wraps over [base::Map()] to create a replacement for
 #' [purrr::map2()].
 #'
-#' @param x,y lists to apply a 2-argument function over.
+#' @param x,y,z lists to apply a n-argument function over.
 #' @param f a function to apply.
 #' @param ... other arguments to the function.
-#' @return the result of applying the function to each pair of items in `x` and
-#'   `y`.
+#' @return the result of applying the function to each set of items in `x` and
+#'   `y` or `z`.
 #' @export
+#' @rdname maps
 lapply2 <- function(x, y, f, ...) {
   Map(f, x, y, ...)
+}
+
+#' @export
+#' @rdname maps
+lapply3 <- function(x, y, z, f, ...) {
+  Map(f, x, y, z, ...)
 }
 
 invoke_call <- function(args, what, ...) {

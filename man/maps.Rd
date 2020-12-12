@@ -2,20 +2,23 @@
 % Please edit documentation in R/utils-functional.R
 \name{lapply2}
 \alias{lapply2}
+\alias{lapply3}
 \title{Map over two lists}
 \usage{
 lapply2(x, y, f, ...)
+
+lapply3(x, y, z, f, ...)
 }
 \arguments{
-\item{x, y}{lists to apply a 2-argument function over.}
+\item{x, y, z}{lists to apply a n-argument function over.}
 
 \item{f}{a function to apply.}
 
 \item{...}{other arguments to the function.}
 }
 \value{
-the result of applying the function to each pair of items in \code{x} and
-\code{y}.
+the result of applying the function to each set of items in \code{x} and
+\code{y} or \code{z}.
 }
 \description{
 This function wraps over \code{\link[base:funprog]{base::Map()}} to create a replacement for

@@ -4,21 +4,38 @@
 \alias{day11}
 \alias{simulate_ferry_seating}
 \alias{update_ferry_seat_matrix}
+\alias{get_adjacent_ferry_seats}
+\alias{get_visible_ferry_seats}
 \alias{example_ferry_seats}
 \title{Day 11: Seating System}
 \usage{
-simulate_ferry_seating(x)
+simulate_ferry_seating(
+  x,
+  neighbor_def = get_adjacent_ferry_seats,
+  threshold = 4
+)
 
-update_ferry_seat_matrix(m, coords = NULL)
+update_ferry_seat_matrix(
+  m,
+  coords = NULL,
+  neighbor_def = get_adjacent_ferry_seats,
+  threshold = 4
+)
 
-example_ferry_seats(example_number = 1)
+get_adjacent_ferry_seats(m, i, j)
+
+get_visible_ferry_seats(m, i, j)
+
+example_ferry_seats(example = 1)
 }
 \arguments{
 \item{x}{Character vector of ferry seatings. One string per row.}
 
 \item{m}{Character matrix representing the seats.}
 
-\item{example_number}{which example data to use (1 or 2). Defaults to 1.}
+\item{coords}{a dataframe containing supplemental dataframe about each cell}
+
+\item{example}{which example data to use. Defaults to 1.}
 }
 \value{
 For Part One, \code{simulate_ferry_seating(x)} repeated updates the ferry
@@ -33,11 +50,11 @@ seats until they converge. For Part Two, \code{f11b(x)} returns ....
 Your plane lands with plenty of time to spare. The final leg of your
 journey is a ferry that goes directly to the tropical island where you
 can finally start your vacation. As you reach the waiting area to board
-the ferry, you realize you\'re so early, nobody else has even arrived
+the ferry, you realize you're so early, nobody else has even arrived
 yet!
 
 By modeling the process people use to choose (or abandon) their seat in
-the waiting area, you\'re pretty sure you can predict the best place to
+the waiting area, you're pretty sure you can predict the best place to
 sit. You make a quick map of the seat layout (your puzzle input).
 
 The seat layout fits neatly on a grid. Each position is either floor
@@ -140,9 +157,129 @@ until no seats change state. \emph{How many seats end up occupied?}
 
 \strong{Part Two}
 
-\emph{(Use have to manually add this yourself.)}
+As soon as people start to arrive, you realize your mistake. People
+don't just care about adjacent seats - they care about \emph{the first seat
+they can see} in each of those eight directions!
 
-\emph{(Try using \code{convert_clipboard_html_to_roxygen_md()})}
+Now, instead of considering just the eight immediately adjacent seats,
+consider the \emph{first seat} in each of those eight directions. For
+example, the empty seat below would see \emph{eight} occupied seats:\preformatted{.......#.
+...#.....
+.#.......
+.........
+..#L....#
+....#....
+.........
+#........
+...#.....
+}
+
+The leftmost empty seat below would only see \emph{one} empty seat, but
+cannot see any of the occupied ones:\preformatted{.............
+.L.L.#.#.#.#.
+.............
+}
+
+The empty seat below would see \emph{no} occupied seats:\preformatted{.##.##.
+#.#.#.#
+##...##
+...L...
+##...##
+#.#.#.#
+.##.##.
+}
+
+Also, people seem to be more tolerant than you expected: it now takes
+\emph{five or more} visible occupied seats for an occupied seat to become
+empty (rather than \emph{four or more} from the previous rules). The other
+rules still apply: empty seats that see no occupied seats become
+occupied, seats matching no rule don\'t change, and floor never changes.
+
+Given the same starting layout as above, these new rules cause the
+seating area to shift around as follows:\preformatted{L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL
+
+#.##.##.##
+#######.##
+#.#.#..#..
+####.##.##
+#.##.##.##
+#.#####.##
+..#.#.....
+##########
+#.######.#
+#.#####.##
+
+#.LL.LL.L#
+#LLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLL#
+#.LLLLLL.L
+#.LLLLL.L#
+
+#.L#.##.L#
+#L#####.LL
+L.#.#..#..
+##L#.##.##
+#.##.#L.##
+#.#####.#L
+..#.#.....
+LLL####LL#
+#.L#####.L
+#.L####.L#
+
+#.L#.L#.L#
+#LLLLLL.LL
+L.L.L..#..
+##LL.LL.L#
+L.LL.LL.L#
+#.LLLLL.LL
+..L.L.....
+LLLLLLLLL#
+#.LLLLL#.L
+#.L#LL#.L#
+
+#.L#.L#.L#
+#LLLLLL.LL
+L.L.L..#..
+##L#.#L.L#
+L.L#.#L.L#
+#.L####.LL
+..#.#.....
+LLL###LLL#
+#.LLLLL#.L
+#.L#LL#.L#
+
+#.L#.L#.L#
+#LLLLLL.LL
+L.L.L..#..
+##L#.#L.L#
+L.L#.LL.L#
+#.LLLL#.LL
+..#.L.....
+LLL###LLL#
+#.LLLLL#.L
+#.L#LL#.L#
+}
+
+Again, at this point, people stop shifting around and the seating area
+reaches equilibrium. Once this occurs, you count \emph{\code{26}} occupied seats.
+
+Given the new visibility method and the rule change for occupied seats
+becoming empty, once equilibrium is reached, \emph{how many seats end up
+occupied?}
 }
 \examples{
 x <- example_ferry_seats(1)

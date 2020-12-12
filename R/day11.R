@@ -11,11 +11,11 @@
 #' Your plane lands with plenty of time to spare. The final leg of your
 #' journey is a ferry that goes directly to the tropical island where you
 #' can finally start your vacation. As you reach the waiting area to board
-#' the ferry, you realize you\'re so early, nobody else has even arrived
+#' the ferry, you realize you're so early, nobody else has even arrived
 #' yet!
 #'
 #' By modeling the process people use to choose (or abandon) their seat in
-#' the waiting area, you\'re pretty sure you can predict the best place to
+#' the waiting area, you're pretty sure you can predict the best place to
 #' sit. You make a quick map of the seat layout (your puzzle input).
 #'
 #' The seat layout fits neatly on a grid. Each position is either floor
@@ -122,7 +122,7 @@
 #' **Part Two**
 #'
 #' As soon as people start to arrive, you realize your mistake. People
-#' don\'t just care about adjacent seats - they care about *the first seat
+#' don't just care about adjacent seats - they care about *the first seat
 #' they can see* in each of those eight directions!
 #'
 #' Now, instead of considering just the eight immediately adjacent seats,
@@ -258,36 +258,70 @@
 #' x <- example_ferry_seats(1)
 #' simulate_ferry_seating(x)
 #' f11b()
-simulate_ferry_seating <- function(x) {
+simulate_ferry_seating <- function(
+  x,
+  neighbor_def = get_adjacent_ferry_seats,
+  threshold = 4
+) {
   m_last <- create_ferry_seat_matrix(x)
 
-  # Try to precompute the grid to save time
-  rows <- seq_len(nrow(m_last))
-  cols <- seq_len(ncol(m_last))
-  coords <- expand.grid(row = rows, col = cols)
-  m_new <- update_ferry_seat_matrix(m_last, coords)
-  i <- 1
+  # I originally computed coords on each call of get_new_ferry_seat_status() and
+  # the adjacent seats whenever they were checked, but the code seemed really
+  # slow. We can compute these only once. Now I put these data in coords and
+  # pass it along.
+  coords <- create_ferry_data(m_last, neighbor_def = neighbor_def)
+  m_new <- update_ferry_seat_matrix(m_last, coords, neighbor_def, threshold)
+
   while (any(m_last != m_new)) {
-    i <- i + 1
-    message(i)
     m_last <- m_new
-    m_new <- update_ferry_seat_matrix(m_last)
+    m_new <- update_ferry_seat_matrix(m_last, coords, neighbor_def, threshold)
   }
   m_new
 }
 
 
+# This was stubborn puzzle to refactor. I wish I had just done a dataframe
+# solution and did joins to get neighbor values and split-apply-combine to count
+# occupancy.
+
+
+# Try to precompute the grids and neighbors to save time
+create_ferry_data <- function(m, neighbor_def = get_adjacent_ferry_seats) {
+  rows <- seq_len(nrow(m))
+  cols <- seq_len(ncol(m))
+  coords <- expand.grid(row = rows, col = cols)
+
+  coords[["neighbors"]] <- coords[["row"]] %>%
+    lapply2(
+      coords[["col"]],
+      function(x, y) neighbor_def(m, x, y)
+    )
+
+  coords
+}
+
+
+#' @param coords a dataframe containing supplemental dataframe about each cell
 #' @rdname day11
 #' @export
-update_ferry_seat_matrix <- function(m, coords = NULL) {
+update_ferry_seat_matrix <- function(
+  m,
+  coords = NULL,
+  neighbor_def = get_adjacent_ferry_seats,
+  threshold = 4
+) {
   if (is.null(coords)) {
-    rows <- seq_len(nrow(m))
-    cols <- seq_len(ncol(m))
-    coords <- expand.grid(row = rows, col = cols)
+    coords <- create_ferry_data(m, neighbor_def)
   }
 
-  coords$row %>%
-    lapply2(coords$col, get_new_ferry_seat_status, m = list(m)) %>%
+  coords[["row"]] %>%
+    lapply3(
+      coords[["col"]],
+      coords[["neighbors"]],
+      get_new_ferry_seat_status,
+      m = list(m),
+      threshold = threshold
+    ) %>%
     unlist() %>%
     matrix(nrow = nrow(m), ncol = ncol(m))
 }
@@ -301,30 +335,37 @@ create_ferry_seat_matrix <- function(x) {
 }
 
 
-get_new_ferry_seat_status <- function(i, j, m) {
+get_new_ferry_seat_status <- function(
+  i,
+  j,
+  neighbors = NULL,
+  m,
+  threshold = 4
+) {
   # "Otherwise, the seat's state does not change."
   current_status <- m[i, j]
   new_status <- current_status
+  seats <- m[neighbors]
 
   # "If a seat is *empty* (`L`) and there are *no* occupied seats
   # adjacent to it, the seat becomes *occupied*."
   if (current_status == "L") {
-    seats <- get_adjacent_seats(m, i, j)
     new_status <- ifelse(all(seats %in% c(".", "L")), "#", "L")
   }
 
   # "If a seat is *occupied* (`#`) and *four or more* seats adjacent to
   # it are also occupied, the seat becomes *empty*."
   if (current_status == "#") {
-    seats <- get_adjacent_seats(m, i, j)
-    new_status <- ifelse(sum(seats == "#") < 4, "#", "L")
+    new_status <- ifelse(sum(seats == "#") < threshold, "#", "L")
   }
 
   new_status
 }
 
 
-get_adjacent_seats <- function(m, i, j) {
+#' @rdname day11
+#' @export
+get_adjacent_ferry_seats <- function(m, i, j) {
   truncate_range <- function(xs, lower, upper) {
     xs[lower <= xs & xs <= upper]
   }
@@ -336,14 +377,50 @@ get_adjacent_seats <- function(m, i, j) {
   g <- g[g$row != i | g$col != j, 1:2]
   g <- as.matrix(g)
 
-  m[g]
+  g
 }
 
 
-#' @param example_number which example data to use (1 or 2). Defaults to 1.
 #' @rdname day11
 #' @export
-example_ferry_seats <- function(example_number = 1) {
+get_visible_ferry_seats <- function(m, i, j) {
+  # recursively walk along a direction
+  observe_ferry_seat_direction <- function(xdir, ydir, m = m, i, j) {
+    yx <- c(i + ydir, j + xdir)
+    out_of_bounds <- any(yx == 0) | yx[2] > ncol(m) | yx[1] > nrow(m)
+    if (out_of_bounds) {
+      NULL
+    } else if (m[yx[1], yx[2]] != ".") {
+      matrix(yx, nrow = 1)
+    } else {
+      Recall(xdir, ydir, m, yx[1], yx[2])
+    }
+  }
+
+  views <- list(
+    observe_ferry_seat_direction (-1, -1, m, i, j),
+    observe_ferry_seat_direction ( 0, -1, m, i, j),
+    observe_ferry_seat_direction ( 1, -1, m, i, j),
+    observe_ferry_seat_direction (-1,  0, m, i, j),
+    # (don't do 0, 0)
+    observe_ferry_seat_direction ( 1,  0, m, i, j),
+    observe_ferry_seat_direction (-1,  1, m, i, j),
+    observe_ferry_seat_direction ( 0,  1, m, i, j),
+    observe_ferry_seat_direction ( 1,  1, m, i, j)
+  )
+  views <- do.call(rbind, views)
+  if (!is.null(views)) {
+    colnames(views) <- c("row", "col")
+    rownames(views) <- seq_len(nrow(views))
+  }
+  views
+}
+
+
+#' @param example which example data to use. Defaults to 1.
+#' @rdname day11
+#' @export
+example_ferry_seats <- function(example = 1) {
   l <- list(
     m1 = c(
       "L.LL.LL.LL",
@@ -416,17 +493,117 @@ example_ferry_seats <- function(example_number = 1) {
       "#L#L##L#L#",
       "#.LLLLLL.L",
       "#.#L#L#.##"
+    ),
+    b1 = c(
+      ".......#.",
+      "...#.....",
+      ".#.......",
+      ".........",
+      "..#L....#",
+      "....#....",
+      ".........",
+      "#........",
+      "...#....."
+    ),
+    b2 = c(
+      ".............",
+      ".L.L.#.#.#.#.",
+      "............."
+    ),
+    b3 = c(
+      ".##.##.",
+      "#.#.#.#",
+      "##...##",
+      "...L...",
+      "##...##",
+      "#.#.#.#",
+      ".##.##."
+    ),
+
+    c1 = c(
+      "L.LL.LL.LL",
+      "LLLLLLL.LL",
+      "L.L.L..L..",
+      "LLLL.LL.LL",
+      "L.LL.LL.LL",
+      "L.LLLLL.LL",
+      "..L.L.....",
+      "LLLLLLLLLL",
+      "L.LLLLLL.L",
+      "L.LLLLL.LL"
+    ),
+    c2 = c(
+      "#.##.##.##",
+      "#######.##",
+      "#.#.#..#..",
+      "####.##.##",
+      "#.##.##.##",
+      "#.#####.##",
+      "..#.#.....",
+      "##########",
+      "#.######.#",
+      "#.#####.##"
+    ),
+    c3 = c(
+      "#.LL.LL.L#",
+      "#LLLLLL.LL",
+      "L.L.L..L..",
+      "LLLL.LL.LL",
+      "L.LL.LL.LL",
+      "L.LLLLL.LL",
+      "..L.L.....",
+      "LLLLLLLLL#",
+      "#.LLLLLL.L",
+      "#.LLLLL.L#"
+    ),
+    c4 = c(
+      "#.L#.##.L#",
+      "#L#####.LL",
+      "L.#.#..#..",
+      "##L#.##.##",
+      "#.##.#L.##",
+      "#.#####.#L",
+      "..#.#.....",
+      "LLL####LL#",
+      "#.L#####.L",
+      "#.L####.L#"
+    ),
+    c5 = c(
+      "#.L#.L#.L#",
+      "#LLLLLL.LL",
+      "L.L.L..#..",
+      "##LL.LL.L#",
+      "L.LL.LL.L#",
+      "#.LLLLL.LL",
+      "..L.L.....",
+      "LLLLLLLLL#",
+      "#.LLLLL#.L",
+      "#.L#LL#.L#"
+    ),
+    c6 = c(
+      "#.L#.L#.L#",
+      "#LLLLLL.LL",
+      "L.L.L..#..",
+      "##L#.#L.L#",
+      "L.L#.#L.L#",
+      "#.L####.LL",
+      "..#.#.....",
+      "LLL###LLL#",
+      "#.LLLLL#.L",
+      "#.L#LL#.L#"
+    ),
+    c7 = c(
+      "#.L#.L#.L#",
+      "#LLLLLL.LL",
+      "L.L.L..#..",
+      "##L#.#L.L#",
+      "L.L#.LL.L#",
+      "#.LLLL#.LL",
+      "..#.L.....",
+      "LLL###LLL#",
+      "#.LLLLL#.L",
+      "#.L#LL#.L#"
     )
   )
-  l[[example_number]]
+  l[[example]]
 }
-
-
-
-
-
-
-
-
-
-
