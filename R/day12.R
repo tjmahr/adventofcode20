@@ -70,41 +70,23 @@
 #'
 #' *(Try using `convert_clipboard_html_to_roxygen_md()`)*
 #'
-#' @param x some data
-#' @return For Part One, `f12a(x)` returns .... For Part Two,
-#'   `f12b(x)` returns ....
+#' @param x ship instructions
+#' @return For Part One, `follow_ship_instructions(x)` returns the east/west
+#'   position, the north/south position and the angle of the ship (divided by
+#'   90). For Part Two, `f12b(x)` returns ....
 #' @export
 #' @examples
-#' f12a()
-#' f12b()
-f12a <- function(x) {
-
-}
-
-#' @rdname day12
-#' @export
-f12b <- function(x) {
-
-}
-
-f12_helper <- function(x) {
-  # angle_to_dir <- function(angle) {
-  #   switch(angle, 0)
-  # }
-  x <- example_data_12()
+#' follow_ship_instructions(example_ship_instructions())
+follow_ship_instructions <- function(x) {
   actions <- substr(x, 1, 1)
   values <- as.numeric(substr(x, 2, nchar(x)))
 
+  # Use positive multiples of 90
   values <- ifelse(actions %in% c("L", "R"), (values / 90) %% 4, values)
-  # command <- ifelse(command %in% "R", "L", command)
 
   angle_to_dir <- function(angle) {
     c("E", "N", "W", "S")[angle + 1]
   }
-  action <- "F"
-  x <- 0
-  y <- 0
-  angle <- 0
 
   perform_ship_action <- function(action, value, x, y, angle) {
     if (action == "F") action <- angle_to_dir(angle)
@@ -117,15 +99,12 @@ f12_helper <- function(x) {
       `L` = c(     0,      0,  value),
       `R` = c(     0,      0, -value)
     )
-    message(paste0(result, collapse = ","))
     updated <- c(x, y, angle) + result
     updated[3] <- updated[3] %% 4
     updated
   }
 
-  follow_ship_instructions <- function(actions, values, x, y, angle) {
-
-    message(actions[1], values[1], ":", x, y, angle)
+  perform_all_ship_actions <- function(actions, values, x, y, angle) {
     if (length(actions) == 0) {
       final_result <- c(x, y, angle)
     } else {
@@ -137,16 +116,19 @@ f12_helper <- function(x) {
     final_result
   }
 
-  follow_ship_instructions(actions, values, 0, 0, 0)
-  # ifelse(command %in% c("L", "R"), (value / 90) %% 4, value)
-  # ship <- list(x = 0, y = 0, dir = 0)
-
-  perform_ship_action("R", 1, )
+  perform_all_ship_actions(actions, values, 0, 0, 0)
 }
+
+
+f12b <- function(x) {
+
+}
+
+
 
 #' @rdname day12
 #' @export
-example_data_12 <- function() {
+example_ship_instructions <- function() {
   c(
     "F10",
     "N3",
