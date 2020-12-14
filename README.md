@@ -107,6 +107,9 @@ puzzles.
 -   10a/b *Count subsets of numbers that keep the gap between successive
     numbers less than or equal to 3:* Math.
 -   11a/b *A Game of Life-like simulation:* Book-keeping. Recursion.
+-   12a/b *Moving a point around or along a vector:* Recursion. Math
+    (rotation matrix).
+-   13a/b *Find bus arrival times:* Math (Chinese remainder theorem).
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.

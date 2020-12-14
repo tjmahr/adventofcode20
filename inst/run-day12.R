@@ -7,4 +7,4 @@ p2a <- follow_waypoint_instructions(x)
 p2 <- sum(abs(p2a[3:4]))
 
 stopifnot(p1 == aoc20_solutions$day12a)
-stopifnot(p2 == aoc20_solutions$day12b)
+stopifnot(all.equal(p2, aoc20_solutions$day12b))
