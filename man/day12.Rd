@@ -3,10 +3,13 @@
 \name{day12}
 \alias{day12}
 \alias{follow_ship_instructions}
+\alias{follow_waypoint_instructions}
 \alias{example_ship_instructions}
 \title{Day 12: Rain Risk}
 \usage{
 follow_ship_instructions(x)
+
+follow_waypoint_instructions(x)
 
 example_ship_instructions()
 }
@@ -16,7 +19,8 @@ example_ship_instructions()
 \value{
 For Part One, \code{follow_ship_instructions(x)} returns the east/west
 position, the north/south position and the angle of the ship (divided by
-90). For Part Two, \code{f12b(x)} returns ....
+90). For Part Two, \code{follow_waypoint_instructions(x)} returns the waypoint
+position followed by the ship position.
 }
 \description{
 \href{https://adventofcode.com/2020/day/12}{Rain Risk}
@@ -82,10 +86,55 @@ position?}
 
 \strong{Part Two}
 
-\emph{(Use have to manually add this yourself.)}
+Before you can give the destination to the captain, you realize that the
+actual action meanings were printed on the back of the instructions the
+whole time.
 
-\emph{(Try using \code{convert_clipboard_html_to_roxygen_md()})}
+Almost all of the actions indicate how to move a \emph{waypoint} which is
+relative to the ship's position:
+\itemize{
+\item Action \emph{\code{N}} means to move the waypoint \emph{north} by the given value.
+\item Action \emph{\code{S}} means to move the waypoint \emph{south} by the given value.
+\item Action \emph{\code{E}} means to move the waypoint \emph{east} by the given value.
+\item Action \emph{\code{W}} means to move the waypoint \emph{west} by the given value.
+\item Action \emph{\code{L}} means to rotate the waypoint around the ship \emph{left}
+(\emph{counter-clockwise}) the given number of degrees.
+\item Action \emph{\code{R}} means to rotate the waypoint around the ship \emph{right}
+(\emph{clockwise}) the given number of degrees.
+\item Action \emph{\code{F}} means to move \emph{forward} to the waypoint a number of
+times equal to the given value.
+}
+
+The waypoint starts \emph{10 units east and 1 unit north} relative to the
+ship. The waypoint is relative to the ship; that is, if the ship moves,
+the waypoint moves with it.
+
+For example, using the same instructions as above:
+\itemize{
+\item \code{F10} moves the ship to the waypoint 10 times (a total of \emph{100 units
+east and 10 units north}), leaving the ship at \emph{east 100, north 10}.
+The waypoint stays 10 units east and 1 unit north of the ship.
+\item \code{N3} moves the waypoint 3 units north to \emph{10 units east and 4 units
+north of the ship}. The ship remains at \emph{east 100, north 10}.
+\item \code{F7} moves the ship to the waypoint 7 times (a total of \emph{70 units
+east and 28 units north}), leaving the ship at \emph{east 170, north 38}.
+The waypoint stays 10 units east and 4 units north of the ship.
+\item \code{R90} rotates the waypoint around the ship clockwise 90 degrees,
+moving it to \emph{4 units east and 10 units south of the ship}. The ship
+remains at \emph{east 170, north 38}.
+\item \code{F11} moves the ship to the waypoint 11 times (a total of \emph{44 units
+east and 110 units south}), leaving the ship at \emph{east 214, south
+72}. The waypoint stays 4 units east and 10 units south of the ship.
+}
+
+After these operations, the ship\'s Manhattan distance from its starting
+position is \code{214 + 72} = \emph{\code{286}}.
+
+Figure out where the navigation instructions actually lead. \emph{What is the
+Manhattan distance between that location and the ship\'s starting
+position?}
 }
 \examples{
 follow_ship_instructions(example_ship_instructions())
+follow_waypoint_instructions(example_ship_instructions())
 }
