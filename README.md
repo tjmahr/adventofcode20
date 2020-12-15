@@ -111,6 +111,8 @@ puzzles.
     (rotation matrix).
 -   13a/b *Find bus arrival times:* Math (Chinese remainder theorem).
 -   14a/b *Masking bits* Math (binary).
+-   15a/b *Keeping track of previous operations* Book-keeping.
+    Performance tricks.
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.
