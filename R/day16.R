@@ -84,35 +84,149 @@
 #'
 #' **Part Two**
 #'
-#' *(Use have to manually add this yourself.)*
+#' Now that you've identified which tickets contain invalid values,
+#' *discard those tickets entirely*. Use the remaining valid tickets to
+#' determine which field is which.
 #'
-#' *(Try using `convert_clipboard_html_to_roxygen_md()`)*
+#' Using the valid ranges for each field, determine what order the fields
+#' appear on the tickets. The order is consistent between all tickets: if
+#' `seat` is the third field, it is the third field on every ticket,
+#' including *your ticket*.
 #'
-#' @param x some data
-#' @return For Part One, `f16a(x)` returns .... For Part Two,
-#'   `f16b(x)` returns ....
+#' For example, suppose you have the following notes:
+#'
+#'     class: 0-1 or 4-19
+#'     row: 0-5 or 8-19
+#'     seat: 0-13 or 16-19
+#'
+#'     your ticket:
+#'     11,12,13
+#'
+#'     nearby tickets:
+#'     3,9,18
+#'     15,1,5
+#'     5,14,9
+#'
+#' Based on the *nearby tickets* in the above example, the first position
+#' must be `row`, the second position must be `class`, and the third
+#' position must be `seat`; you can conclude that in *your ticket*, `class`
+#' is `12`, `row` is `11`, and `seat` is `13`.
+#'
+#' Once you work out which field is which, look for the six fields on *your
+#' ticket* that start with the word `departure`. *What do you get if you
+#' multiply those six values together?*
+#'
+#' @param x Character vector with the train data.
+#' @return For Part One, `find_invalid_train_ticket_values(x)` returns a list
+#'   with the problem data which includes a field for the numbers from invalid
+#'   tickets and list of tickets with the invalid ones removed. For Part Two,
+#'   `solve_train_ticket_fields(x)` solves the train tickets, returning a list
+#'   with a dataframe of the ticket field constraints and a dataframe of train
+#'   tickets with the solvable fields set as column names. The first row of the
+#'   tickets dataframe is the player's ticket.
 #' @export
 #' @examples
-#' f16a()
-#' f16b()
-f16a <- function(x) {
+#' find_invalid_train_ticket_values(example_train_tickets())
+#' solve_train_ticket_fields(example_train_tickets(2))
+find_invalid_train_ticket_values <- function(x) {
+  data <- setup_train_data(x)
 
+  in_range <- function(x, l, u) l <= x & x <= u
+  in_any_range <- function(x, ls, us) any(in_range(x, ls, us))
+
+  ls <- c(data$rules$x1, data$rules$y1)
+  us <- c(data$rules$x2, data$rules$y2)
+
+  invalid_numbers <- data$nearby_tickets %>%
+    lapply(
+      keep_if, function(x) !in_any_range(x, ls, us)
+    )
+
+  # Knock out invalid tickets
+  data$nearby_tickets <- data$nearby_tickets[lengths(invalid_numbers) == 0]
+  data$invalid_numbers <- unlist(invalid_numbers)
+  data
 }
+
 
 #' @rdname day16
 #' @export
-f16b <- function(x) {
+solve_train_ticket_fields <- function(x) {
+  all_in_range_pair_v <- function(xs, v) {
+    all((v[1] <= xs & xs <= v[2]) | (v[3] <= xs & xs <= v[4]))
+  }
 
+  # Set the initial values for the candidate names.
+  set_candidate_names <- function(rules, tickets) {
+    unmatched_names <- tickets %>% names() %>% stringr::str_subset("V\\d+")
+    rules$candidates <- seq_along(rules$field) %>%
+      as.list() %>%
+      lapply(
+        function(x) unmatched_names
+      )
+    rules
+  }
+
+  # Find which columns of tickets satisfying the given ranges. This is meant to
+  # applied to a single row of rules.
+  check_candidates <- function(rule, tickets) {
+    candidates <- rule$candidates[[1]]
+    v <- unlist(rule[1, c("x1", "x2", "y1", "y2")])
+    satisfying_cols <- tickets[, candidates, drop = FALSE] %>%
+      keep_if(function(x) all_in_range_pair_v(x, v)) %>%
+      names()
+    rule[["candidates"]][[1]] <- satisfying_cols
+    rule
+  }
+
+  # For each rule with one candidate, rename the tickets column to the field
+  # name. Then remove that candidate from consideration. Repeat.
+  apply_candidates <- function(rules, tickets) {
+    resolved <- which(lengths(rules$candidates) == 1)
+    while (length(resolved) >= 1) {
+      for (rule_i in resolved) {
+        # Update tickets columns
+        this_key <- rules$field[[rule_i]]
+        this_candidate <- rules$candidates[[rule_i]]
+        which_name_to_change <- which(names(tickets) == this_candidate)
+        names(tickets)[which_name_to_change] <- this_key
+        # Update candidates
+        rules$candidates <- rules$candidates %>%
+          lapply(function(x) x[x != this_candidate])
+        resolved <- which(lengths(rules$candidates) == 1)
+      }
+    }
+    list(rules = rules, tickets = tickets)
+  }
+
+  data <- find_invalid_train_ticket_values(x)
+  rules <- data$rules
+
+  # Combine all the tickets (rowwise) into a dataframe
+  tickets <- c(list(data$my_ticket), data$nearby_tickets) %>%
+    lapply(t) %>%
+    invoke_call(rbind) %>%
+    as.data.frame()
+
+  # Find first set of candidate columns for each field
+  rules <- rules %>%
+    set_candidate_names(tickets) %>%
+    split(seq_len(nrow(.))) %>%
+    lapply(check_candidates, tickets) %>%
+    invoke_call(rbind)
+
+  apply_candidates(rules, tickets)
 }
 
-f16_helper <- function(x) {
-  x <- example_train_tickets()
+
+setup_train_data <- function(x) {
   sections <- group_at_empty_lines(x)
+
   rules <- sections[[1]] %>%
     stringr::str_match("([A-z ]+): (\\d+)-(\\d+) or (\\d+)-(\\d+)") %>%
     as.data.frame() %>%
-    stats::setNames(c("line", "field", "x1", "x2", "y1", "y2"))
-  rules <- utils::type.convert(rules, as.is = TRUE)
+    stats::setNames(c("line", "field", "x1", "x2", "y1", "y2")) %>%
+    utils::type.convert(as.is = TRUE)
 
   nearby <- sections[[3]][-1] %>%
     lapply(strsplit, ",") %>%
@@ -126,8 +240,9 @@ f16_helper <- function(x) {
     unlist()
 
   list(
-    nearby_tickets = nearby,
-    my_ticket = mine
+    rules = rules,
+    my_ticket = mine,
+    nearby_tickets = nearby
   )
 }
 
@@ -149,6 +264,19 @@ example_train_tickets <- function(example = 1) {
       "40,4,50",
       "55,2,20",
       "38,6,12"
+    ),
+    b1 = c(
+      "class: 0-1 or 4-19",
+      "row: 0-5 or 8-19",
+      "seat: 0-13 or 16-19",
+      "",
+      "your ticket:",
+      "11,12,13",
+      "",
+      "nearby tickets:",
+      "3,9,18",
+      "15,1,5",
+      "5,14,9"
     )
   )
   l[[example]]

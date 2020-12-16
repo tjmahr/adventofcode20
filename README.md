@@ -113,6 +113,8 @@ puzzles.
 -   14a/b *Masking bits* Math (binary).
 -   15a/b *Keeping track of previous operations* Book-keeping.
     Performance tricks.
+-   16a/b *Validating data and finding a satisfying assignment of
+    names.* Book-keeping.
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.

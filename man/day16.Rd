@@ -2,25 +2,30 @@
 % Please edit documentation in R/day16.R
 \name{day16}
 \alias{day16}
-\alias{f16a}
-\alias{f16b}
+\alias{find_invalid_train_ticket_values}
+\alias{solve_train_ticket_fields}
 \alias{example_train_tickets}
 \title{Day 16: Ticket Translation}
 \usage{
-f16a(x)
+find_invalid_train_ticket_values(x)
 
-f16b(x)
+solve_train_ticket_fields(x)
 
 example_train_tickets(example = 1)
 }
 \arguments{
-\item{x}{some data}
+\item{x}{Character vector with the train data.}
 
 \item{example}{which example data to use. Defaults to 1.}
 }
 \value{
-For Part One, \code{f16a(x)} returns .... For Part Two,
-\code{f16b(x)} returns ....
+For Part One, \code{find_invalid_train_ticket_values(x)} returns a list
+with the problem data which includes a field for the numbers from invalid
+tickets and list of tickets with the invalid ones removed. For Part Two,
+\code{solve_train_ticket_fields(x)} solves the train tickets, returning a list
+with a dataframe of the ticket field constraints and a dataframe of train
+tickets with the solvable fields set as column names. The first row of the
+tickets dataframe is the player's ticket.
 }
 \description{
 \href{https://adventofcode.com/2020/day/16}{Ticket Translation}
@@ -102,11 +107,38 @@ ticket scanning error rate?}
 
 \strong{Part Two}
 
-\emph{(Use have to manually add this yourself.)}
+Now that you've identified which tickets contain invalid values,
+\emph{discard those tickets entirely}. Use the remaining valid tickets to
+determine which field is which.
 
-\emph{(Try using \code{convert_clipboard_html_to_roxygen_md()})}
+Using the valid ranges for each field, determine what order the fields
+appear on the tickets. The order is consistent between all tickets: if
+\code{seat} is the third field, it is the third field on every ticket,
+including \emph{your ticket}.
+
+For example, suppose you have the following notes:\preformatted{class: 0-1 or 4-19
+row: 0-5 or 8-19
+seat: 0-13 or 16-19
+
+your ticket:
+11,12,13
+
+nearby tickets:
+3,9,18
+15,1,5
+5,14,9
+}
+
+Based on the \emph{nearby tickets} in the above example, the first position
+must be \code{row}, the second position must be \code{class}, and the third
+position must be \code{seat}; you can conclude that in \emph{your ticket}, \code{class}
+is \code{12}, \code{row} is \code{11}, and \code{seat} is \code{13}.
+
+Once you work out which field is which, look for the six fields on \emph{your
+ticket} that start with the word \code{departure}. \emph{What do you get if you
+multiply those six values together?}
 }
 \examples{
-f16a()
-f16b()
+find_invalid_train_ticket_values(example_train_tickets())
+solve_train_ticket_fields(example_train_tickets(2))
 }
