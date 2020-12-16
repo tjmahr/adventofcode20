@@ -247,6 +247,8 @@ prepare_bus_notes <- function(x) {
 }
 
 
+#' @param example Which example data to use (by position or name). Defaults to
+#'   1.
 #' @rdname day13
 #' @export
 example_bus_notes <- function(example = 1) {

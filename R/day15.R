@@ -95,14 +95,15 @@
 #' Given your starting numbers, *what will be the `30000000`th number
 #' spoken?*
 #'
-#' @param x the initial setup of the memory game
-#' @return For Part One, `play_memory_game(x)` returns a list of vectors with
-#'   game data. For Part Two, `f15b(x)` returns ....
+#' @param x The initial setup of the memory game.
+#' @param max_turn Number of steps to run the game. Defaults to 2020.
+#' @return `play_memory_game(x)` returns a list of vectors with
+#'   game data.
 #' @export
 #' @examples
 #' game <- play_memory_game(example_memory_game(1))
 #' game$last_num
-play_memory_game <- function(x, max_turn) {
+play_memory_game <- function(x, max_turn = 2020) {
   game <- setup_memory_game(x, max_turn)
   turn <- game$turn
   last_num <- game$last_num
@@ -182,6 +183,8 @@ setup_memory_game <- function(x, max_turn) {
 }
 
 
+#' @param example Which example data to use (by position or name). Defaults to
+#'   1.
 #' @rdname day15
 #' @export
 example_memory_game <- function(example = 1) {

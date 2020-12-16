@@ -111,7 +111,7 @@ f16_helper <- function(x) {
   rules <- sections[[1]] %>%
     stringr::str_match("([A-z ]+): (\\d+)-(\\d+) or (\\d+)-(\\d+)") %>%
     as.data.frame() %>%
-    setNames(c("line", "field", "x1", "x2", "y1", "y2"))
+    stats::setNames(c("line", "field", "x1", "x2", "y1", "y2"))
   rules <- utils::type.convert(rules, as.is = TRUE)
 
   nearby <- sections[[3]][-1] %>%

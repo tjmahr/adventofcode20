@@ -6,16 +6,21 @@
 \alias{example_memory_game}
 \title{Day 15: Rambunctious Recitation}
 \usage{
-play_memory_game(x, max_turn)
+play_memory_game(x, max_turn = 2020)
 
 example_memory_game(example = 1)
 }
 \arguments{
-\item{x}{the initial setup of the memory game}
+\item{x}{The initial setup of the memory game.}
+
+\item{max_turn}{Number of steps to run the game. Defaults to 2020.}
+
+\item{example}{Which example data to use (by position or name). Defaults to
+1.}
 }
 \value{
-For Part One, \code{play_memory_game(x)} returns a list of vectors with
-game data. For Part Two, \code{f15b(x)} returns ....
+\code{play_memory_game(x)} returns a list of vectors with
+game data.
 }
 \description{
 \href{https://adventofcode.com/2020/day/15}{Rambunctious Recitation}

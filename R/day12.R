@@ -135,7 +135,7 @@ follow_ship_instructions <- function(x) {
   perform_ship_action <- function(action, value, x, y, angle) {
     if (action == "F") action <- angle_to_dir(angle)
     result <- switch(
-      action,
+      EXPR = action,
       # purdy spacing
       `E` = c( value,      0,      0),
       `W` = c(-value,      0,      0),
@@ -185,7 +185,7 @@ follow_waypoint_instructions <- function(x) {
   perform_action <- function(action, value, waypoint, ship) {
     if (action == "F") ship <- ship + waypoint * value
     waypoint <- switch(
-      action,
+      EXPR = action,
       `E` = waypoint + c(value, 0),
       `W` = waypoint - c(value, 0),
       `N` = waypoint + c(0, value),

@@ -251,13 +251,20 @@
 #'
 #' @param x Character vector of ferry seatings. One string per row.
 #' @param m Character matrix representing the seats.
-#' @return For Part One, `simulate_ferry_seating(x)` repeated updates the ferry
-#'   seats until they converge. For Part Two, `f11b(x)` returns ....
+#' @param i,j Integers indicating the seat row and column, respectively.
+#' @param neighbor_def Function for finding neighboring seats in the ferry.
+#' @param coords Dataframe containing supplemental dataframe about each seat.
+#'   This argument is used to speed up operations by precomputing neighbors.
+#' @param threshold Integer setting the threshold for the number of neighboring
+#'   sees. Defaults to 4.
+#' @return `get_adjacent_ferry_seats()` and `get_visible_ferry_seats()` find the
+#'   neighbors of a seat. `update_ferry_seat_matrix()` runs a single step of the
+#'   ferry seating process. `simulate_ferry_seating(x)` repeated updates the
+#'   ferry seats until they converge.
 #' @export
 #' @examples
 #' x <- example_ferry_seats(1)
 #' simulate_ferry_seating(x)
-#' f11b()
 simulate_ferry_seating <- function(
   x,
   neighbor_def = get_adjacent_ferry_seats,
@@ -301,7 +308,6 @@ create_ferry_data <- function(m, neighbor_def = get_adjacent_ferry_seats) {
 }
 
 
-#' @param coords a dataframe containing supplemental dataframe about each cell
 #' @rdname day11
 #' @export
 update_ferry_seat_matrix <- function(
@@ -417,7 +423,7 @@ get_visible_ferry_seats <- function(m, i, j) {
 }
 
 
-#' @param example which example data to use. Defaults to 1.
+#' @param example Which example data to use. Defaults to 1.
 #' @rdname day11
 #' @export
 example_ferry_seats <- function(example = 1) {

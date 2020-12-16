@@ -325,10 +325,11 @@ convert_binary_to_integer <- function(x) {
 }
 
 
-#' @param example which example data to use. Defaults to 1.
+#' @param example Which example data to use (by position or name). Defaults to
+#'   1.
 #' @rdname day14
 #' @export
-example_initialization <- function(example) {
+example_initialization <- function(example = 1) {
   l <- list(
     a = c(
       "mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X",

@@ -15,6 +15,9 @@ example_bus_notes(example = 1)
 }
 \arguments{
 \item{x}{2-element character vector of bus notes.}
+
+\item{example}{Which example data to use (by position or name). Defaults to
+1.}
 }
 \value{
 For Part One, \code{estimate_earliest_bus(x)} returns the timestamp of the

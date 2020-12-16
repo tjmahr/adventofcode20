@@ -21,11 +21,12 @@
 #'   `f{{{ dd_number }}}b(x)` returns ....
 #' @export
 #' @examples
-#' f{{{ dd_number }}}a()
+#' f{{{ dd_number }}}a(example_data_{{{ dd_number }}}())
 #' f{{{ dd_number }}}b()
 f{{{ dd_number }}}a <- function(x) {
 
 }
+
 
 #' @rdname day{{{ dd_number }}}
 #' @export
@@ -33,14 +34,23 @@ f{{{ dd_number }}}b <- function(x) {
 
 }
 
+
 f{{{ dd_number }}}_helper <- function(x) {
 
 }
 
+
+#' @param example Which example data to use (by position or name). Defaults to
+#'   1.
 #' @rdname day{{{ dd_number }}}
 #' @export
-example_data_{{{ dd_number }}} <- function() {
-  c(
+example_data_{{{ dd_number }}} <- function(example = 1) {
+  l <- list(
+    a = c(
 
+
+    )
   )
+  l[[example]]
 }
+

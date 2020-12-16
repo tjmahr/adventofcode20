@@ -31,15 +31,25 @@ example_ferry_seats(example = 1)
 \arguments{
 \item{x}{Character vector of ferry seatings. One string per row.}
 
+\item{neighbor_def}{Function for finding neighboring seats in the ferry.}
+
+\item{threshold}{Integer setting the threshold for the number of neighboring
+sees. Defaults to 4.}
+
 \item{m}{Character matrix representing the seats.}
 
-\item{coords}{a dataframe containing supplemental dataframe about each cell}
+\item{coords}{Dataframe containing supplemental dataframe about each seat.
+This argument is used to speed up operations by precomputing neighbors.}
 
-\item{example}{which example data to use. Defaults to 1.}
+\item{i, j}{Integers indicating the seat row and column, respectively.}
+
+\item{example}{Which example data to use. Defaults to 1.}
 }
 \value{
-For Part One, \code{simulate_ferry_seating(x)} repeated updates the ferry
-seats until they converge. For Part Two, \code{f11b(x)} returns ....
+\code{get_adjacent_ferry_seats()} and \code{get_visible_ferry_seats()} find the
+neighbors of a seat. \code{update_ferry_seat_matrix()} runs a single step of the
+ferry seating process. \code{simulate_ferry_seating(x)} repeated updates the
+ferry seats until they converge.
 }
 \description{
 \href{https://adventofcode.com/2020/day/11}{Seating System}
@@ -284,5 +294,4 @@ occupied?}
 \examples{
 x <- example_ferry_seats(1)
 simulate_ferry_seating(x)
-f11b()
 }

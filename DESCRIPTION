@@ -27,4 +27,5 @@ Imports:
     readr,
     xml2,
     glue,
-    clipr
+    clipr,
+    curl

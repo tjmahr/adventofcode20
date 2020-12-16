@@ -11,12 +11,13 @@ process_initialization_instructions(x)
 
 process_initialization_instructions_v2(x)
 
-example_initialization(example)
+example_initialization(example = 1)
 }
 \arguments{
 \item{x}{initialization instructions}
 
-\item{example}{which example data to use. Defaults to 1.}
+\item{example}{Which example data to use (by position or name). Defaults to
+1.}
 }
 \value{
 For Part One, \code{process_initialization_instructions(x)} returns the
