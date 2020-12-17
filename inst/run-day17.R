@@ -1,0 +1,8 @@
+library(adventofcode20)
+x <- readLines("./inst/input17.txt")
+
+p1 <- f17a(x)
+p2 <- f17b(x)
+
+stopifnot(p1 == aoc20_solutions$day17a)
+stopifnot(p2 == aoc20_solutions$day17b)
