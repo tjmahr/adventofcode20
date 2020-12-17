@@ -192,13 +192,55 @@
 #' @export
 #' @examples
 #' f17a()
-#' f17b()
 f17a <- function(x) {
+  # Maybe one great big preallocated array?
+  x <- example_cube_state(1)
+  x_num <- x %>%
+    chartr(".", "0", .) %>%
+    chartr("#", "1", .) %>%
+    strsplit("") %>%
+    unlist() %>%
+    as.numeric() %>%
+    matrix(nrow = length(x), byrow = TRUE)
 
+  y_start <- length(x) + 7 * 2
+  x_start <- nchar(x[1]) + 7 * 2
+  z_start <- max(c(x_start, y_start))
+
+
+  initial_ys <- seq(8, length.out = y_start - 14, by = 1)
+  initial_xs <- seq(8, length.out = x_start - 14, by = 1)
+  initial_zs <- median(seq(8, length.out = z_start - 14, by = 1))
+
+  zeros <- rep(0, y_start * x_start * z_start)
+
+  a <- array(
+    zeros,
+    dim = c(y_start, x_start, z_start),
+    list(y = seq_len(y_start), x = seq_len(x_start), z = seq_len(z_start))
+  )
+
+  a[initial_ys, initial_xs, initial_zs] <- x_num
+  a[, , initial_zs]
+
+
+  #'     z=-1
+  #'     #..
+  #'     ..#
+  #'     .#.
+  #'
+  #'     z=0
+  #'     #.#
+  #'     .##
+  #'     .#.
+  #'
+  #'     z=1
+  #'     #..
+  #'     ..#
+  #'     .#.
 }
 
-#' @rdname day17
-#' @export
+
 f17b <- function(x) {
 
 }
@@ -207,10 +249,17 @@ f17_helper <- function(x) {
 
 }
 
+
+#' @param example which example data to use. Defaults to 1.
 #' @rdname day17
 #' @export
-example_data_17 <- function() {
-  c(
-
+example_cube_state <- function(example) {
+  l <- list(
+    a1 = c(
+      ".#.",
+      "..#",
+      "###"
+    )
   )
+  l[[example]]
 }
