@@ -513,7 +513,7 @@ setup_cube_dims <- function(x, dim = c("3d", "4d")) {
 
 create_cube_neighbors <- function(row) {
   # Find the columns that are dimensions
-  indices <-stringr::str_subset(names(row), "^\\w$")
+  indices <- stringr::str_subset(names(row), "^\\w$")
 
   # Add -1, 0, 1 to each one and get all neighbors
   neighbors <- row[indices] %>%
@@ -556,7 +556,7 @@ flip_cube_states <- function(data) {
     split(seq_len(nrow(.))) %>%
     lapply(create_cube_neighbors) %>%
     do.call(rbind, .) %>%
-    # Known neighbors. Unknown neighbors get 0 so we don't need them
+    # Keep known neighbors. Unknown neighbors would get 0 so we don't need them
     filter_rows_in(.data$id %in% data$id)
 
   just_values <- data[c("id", "value")]
