@@ -182,144 +182,414 @@
 #'
 #' **Part Two**
 #'
-#' *(Use have to manually add this yourself.)*
+#' For some reason, your simulated results don\'t match what the
+#' experimental energy source engineers expected. Apparently, the pocket
+#' dimension actually has *four spatial dimensions*, not three.
 #'
-#' *(Try using `convert_clipboard_html_to_roxygen_md()`)*
+#' The pocket dimension contains an infinite 4-dimensional grid. At every
+#' integer 4-dimensional coordinate (`x,y,z,w`), there exists a single cube
+#' (really, a *hypercube*) which is still either *active* or *inactive*.
 #'
-#' @param x some data
-#' @return For Part One, `f17a(x)` returns .... For Part Two,
-#'   `f17b(x)` returns ....
+#' Each cube only ever considers its *neighbors*: any of the 80 other cubes
+#' where any of their coordinates differ by at most `1`. For example, given
+#' the cube at `x=1,y=2,z=3,w=4`, its neighbors include the cube at
+#' `x=2,y=2,z=3,w=3`, the cube at `x=0,y=2,z=3,w=4`, and so on.
+#'
+#' The initial state of the pocket dimension still consists of a small flat
+#' region of cubes. Furthermore, the same rules for cycle updating still
+#' apply: during each cycle, consider the *number of active neighbors* of
+#' each cube.
+#'
+#' For example, consider the same initial state as in the example above.
+#' Even though the pocket dimension is 4-dimensional, this initial state
+#' represents a small 2-dimensional slice of it. (In particular, this
+#' initial state defines a 3x3x1x1 region of the 4-dimensional space.)
+#'
+#' Simulating a few cycles from this initial state produces the following
+#' configurations, where the result of each cycle is shown layer-by-layer
+#' at each given `z` and `w` coordinate:
+#'
+#'     Before any cycles:
+#'
+#'     z=0, w=0
+#'     .#.
+#'     ..#
+#'     ###
+#'
+#'
+#'     After 1 cycle:
+#'
+#'     z=-1, w=-1
+#'     #..
+#'     ..#
+#'     .#.
+#'
+#'     z=0, w=-1
+#'     #..
+#'     ..#
+#'     .#.
+#'
+#'     z=1, w=-1
+#'     #..
+#'     ..#
+#'     .#.
+#'
+#'     z=-1, w=0
+#'     #..
+#'     ..#
+#'     .#.
+#'
+#'     z=0, w=0
+#'     #.#
+#'     .##
+#'     .#.
+#'
+#'     z=1, w=0
+#'     #..
+#'     ..#
+#'     .#.
+#'
+#'     z=-1, w=1
+#'     #..
+#'     ..#
+#'     .#.
+#'
+#'     z=0, w=1
+#'     #..
+#'     ..#
+#'     .#.
+#'
+#'     z=1, w=1
+#'     #..
+#'     ..#
+#'     .#.
+#'
+#'
+#'     After 2 cycles:
+#'
+#'     z=-2, w=-2
+#'     .....
+#'     .....
+#'     ..#..
+#'     .....
+#'     .....
+#'
+#'     z=-1, w=-2
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=0, w=-2
+#'     ###..
+#'     ##.##
+#'     #...#
+#'     .#..#
+#'     .###.
+#'
+#'     z=1, w=-2
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=2, w=-2
+#'     .....
+#'     .....
+#'     ..#..
+#'     .....
+#'     .....
+#'
+#'     z=-2, w=-1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=-1, w=-1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=0, w=-1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=1, w=-1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=2, w=-1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=-2, w=0
+#'     ###..
+#'     ##.##
+#'     #...#
+#'     .#..#
+#'     .###.
+#'
+#'     z=-1, w=0
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=0, w=0
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=1, w=0
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=2, w=0
+#'     ###..
+#'     ##.##
+#'     #...#
+#'     .#..#
+#'     .###.
+#'
+#'     z=-2, w=1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=-1, w=1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=0, w=1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=1, w=1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=2, w=1
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=-2, w=2
+#'     .....
+#'     .....
+#'     ..#..
+#'     .....
+#'     .....
+#'
+#'     z=-1, w=2
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=0, w=2
+#'     ###..
+#'     ##.##
+#'     #...#
+#'     .#..#
+#'     .###.
+#'
+#'     z=1, w=2
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'     .....
+#'
+#'     z=2, w=2
+#'     .....
+#'     .....
+#'     ..#..
+#'     .....
+#'     .....
+#'
+#' After the full six-cycle boot process completes, *`848`* cubes are left
+#' in the *active* state.
+#'
+#' Starting with your given initial configuration, simulate six cycles in a
+#' 4-dimensional space. *How many cubes are left in the active state after
+#' the sixth cycle?*
+#'
+#' @param x Starting plane for a Conway cube.
+#' @param dim Dimension setting. Either `"3d" or "4d"`.
+#' @param messages Whether to message on the start of each iteration.
+#' @return `run_conway_cube(x)` returns a dataframe with one row per cube. The
+#'   `"value"` column should sum to the solution.
 #' @export
 #' @examples
-#' f17a()
-f17a <- function(x) {
-  x <- example_cube_state(1)
+#' run_conway_cube(example_cube_state())
+run_conway_cube <- function(x, dim = "3d", messages = FALSE) {
+  # I had some false starts. Tried to preallocate every cell that could
+  # eventually be checked into an array. Tried to do the same thing but with a
+  # dataframe. Decided to grow the data on each turn because only the cells the
+  # can see 1 need to be checked.
+
+  d <- setup_cube_dims(x, dim)
+
+  # We grow the table with `find_new_cube_cells()` so that every cell that
+  # neighbors a 1 is accounted for. Then we get the neighbors of each cell and
+  # count how many are active and flip states accordingly.
+  for (i in seq_len(6)) {
+    if (messages) message(sum(d$value))
+    d <- d %>% find_new_cube_cells() %>% flip_cube_states()
+  }
+
+  d
+}
+
+
+setup_cube_dims <- function(x, dim = c("3d", "4d")) {
+  dim <- match.arg(dim)
   x_num <- x %>%
     chartr(".", "0", .) %>%
     chartr("#", "1", .) %>%
     strsplit("") %>%
     unlist() %>%
-    as.numeric() %>%
-    matrix(nrow = length(x), byrow = TRUE)
+    as.numeric()
 
+  if (dim == "3d") {
+    d <- data.frame(
+      y = rep(seq_len(length(x)), each = nchar(x)[1]),
+      x = rep(seq_len(nchar(x)[1]), length(x)),
+      z = 0,
+      neighbors_added = FALSE
+    )
+    d$id <- paste(d$y, d$x, d$z, sep = "_")
 
-  # Maybe one great big preallocated array? All the commented out code has tried
-  # to set up this approach.
+  } else {
+    d <- data.frame(
+      y = rep(seq_len(length(x)), each = nchar(x)[1]),
+      x = rep(seq_len(nchar(x)[1]), length(x)),
+      z = 0,
+      w = 0,
+      neighbors_added = FALSE
+    )
+    d$id <- paste(d$y, d$x, d$z, d$w, sep = "_")
+  }
 
-  # No. Use a dataframe. Add neighbors for all locations with a 1. Filter down
-  # to just 1s. Join on/to neighbors. Count neighbors. Flip ones that satify
-  # conditions. Then add neighboors for all locations with a 1...
-
-
-  # y_start <- length(x) + 7 * 2
-  # x_start <- nchar(x[1]) + 7 * 2
-  # z_start <- max(c(x_start, y_start))
-  #
-  # d <- expand.grid(
-  #   y = seq_len(y_start),
-  #   x = seq_len(x_start),
-  #   z = seq_len(z_start),
-  #   value = 0
-  # )
-  # d$tag <- paste(d$y, d$x, d$z, sep = "_")
-  #
-  # big_list <- d %>%
-  #   split(seq_len(nrow(d)))
-  #
-  # for (i in seq_along(x_num)) {
-  #   xi <- rep(8:10, 3)[i]
-  #   yi <- rep(8:10, each = 3)[i]
-  #   zi <- 9
-  #   d[d$x == xi & d$y == yi & d$z == zi, ] <- x_num[i]
-  # }
-
-  # d
-
-#   d[d$x ==  & d$y == rep(8:10, each = 3), ]
-#
-#
-#   rep(8:10, each = 3)
-#
-#
-#   zeros <- rep(0, y_start * x_start * z_start)
-#
-  # a <- array(
-  #   zeros,
-  #   dim = c(y_start, x_start, z_start),
-  #   list(y = seq_len(y_start), x = seq_len(x_start), z = seq_len(z_start))
-  # )
-  #
-  # initial_ys <- seq(8, length.out = y_start - 14, by = 1)
-  # initial_xs <- seq(8, length.out = x_start - 14, by = 1)
-  # initial_zs <- median(seq(8, length.out = z_start - 14, by = 1))
-  # a[initial_ys, initial_xs, initial_zs] <- x_num
-  #
-  # dimnames(a[initial_ys, initial_xs, initial_zs, drop = FALSE])
-  #
-  # m <- a[initial_ys, initial_xs, initial_zs, drop = FALSE] %>%
-  #   dimnames() %>%
-  #   expand.grid(stringsAsFactors = FALSE) %>%
-  #   as.matrix() %>%
-  #   as.numeric() %>%
-  #   matrix(ncol = 3)
-  # m <- m[-5, ]
-  # a[m]
-  #
-  #   # as.numeric() %>%
-  #   # matrix()
-  #
-  # # d
-  # # %>%
-  # #   lapply(as.numeric) %>% as.matrix()
-  # # a[d]
-  # #
-  # # array(a[initial_ys, initial_xs, initial_zs])
-  # #
-
-#   x_num
-# /
-#
-#   x <- 8
-#   y <- 8
-#   z <- 8
-#
-#   get_cube_neighbors <- function(cube, x, y, z) {
-#     a
-#   }
-#
-#   a[, , initial_zs]
-
-
-  #'     z=-1
-  #'     #..
-  #'     ..#
-  #'     .#.
-  #'
-  #'     z=0
-  #'     #.#
-  #'     .##
-  #'     .#.
-  #'
-  #'     z=1
-  #'     #..
-  #'     ..#
-  #'     .#.
+  d$value <- x_num
+  d
 }
 
 
-f17b <- function(x) {
+create_cube_neighbors <- function(row) {
+  # Find the columns that are dimensions
+  indices <-stringr::str_subset(names(row), "^\\w$")
 
+  # Add -1, 0, 1 to each one and get all neighbors
+  neighbors <- row[indices] %>%
+    lapply(function(x) c(x - 1, x, x + 1)) %>%
+    expand.grid() %>%
+    as.data.frame()
+
+  # Create ids and remove self from neighbor set.
+  neighbors$id <- apply(neighbors, 1, paste, collapse = "_")
+  neighbors$seed_id <- row$id
+  neighbors[neighbors$id != row$id, ]
 }
 
-f17_helper <- function(x) {
 
+# Make sure every cell with a 1 has its neighbors in the table
+find_new_cube_cells <- function(data) {
+  # Get the new neighbors for each occupied cell
+  all_neighbors <- data %>%
+    filter_rows_in(value == 1, !neighbors_added) %>%
+    split(seq_len(nrow(.))) %>%
+    lapply(create_cube_neighbors) %>%
+    do.call(rbind, .) %>%
+    filter_rows_in(!duplicated(.$id))
+
+  # Find the new cells
+  new_rows <- all_neighbors[! all_neighbors$id %in% data$id, ]
+  new_rows$seed_id <- NULL
+  new_rows$neighbors_added <- FALSE
+  new_rows$value <- 0
+  new_rows <- new_rows[names(data)]
+
+  data[data$value == 1, "neighbors_added"] <- TRUE
+  rbind(data, new_rows)
+}
+
+
+flip_cube_states <- function(data) {
+  # Get the (known) neighbors of each cell
+  neighbors <- data %>%
+    split(seq_len(nrow(.))) %>%
+    lapply(create_cube_neighbors) %>%
+    do.call(rbind, .) %>%
+    # Known neighbors. Unknown neighbors get 0 so we don't need them
+    filter_rows_in(.data$id %in% data$id)
+
+  just_values <- data[c("id", "value")]
+  on_now <- just_values %>%
+    filter_rows_in(.data$value == 1) %>%
+    getElement("id")
+
+  merged <- neighbors %>%
+    merge(just_values, by.x = "seed_id", by.y = "id")
+
+  # Apply the two rules
+  to_flip_off <- merged %>%
+    filter_rows_in(.data$id %in% on_now) %>%
+    split(.$id) %>%
+    keep_if(function(x) ! sum(x$value) %in% c(2, 3)) %>%
+    names()
+
+  to_flip_on <- merged %>%
+    filter_rows_in(! .data$id %in% on_now) %>%
+    split(.$id) %>%
+    keep_if(function(x) sum(x$value) == 3) %>%
+    names()
+
+  data$value[data$id %in% to_flip_off] <- 0
+  data$value[data$id %in% to_flip_on] <- 1
+  data
 }
 
 
 #' @param example which example data to use. Defaults to 1.
 #' @rdname day17
 #' @export
-example_cube_state <- function(example) {
+example_cube_state <- function(example = 1) {
   l <- list(
     a1 = c(
       ".#.",

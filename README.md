@@ -115,7 +115,7 @@ puzzles.
     Performance tricks.
 -   16a/b *Validating data and finding a satisfying assignment of
     names.* Book-keeping.
--   17a/b  
+-   17a/b *A 3D Game of Life-like simulation:* Table joins.
 -   18a/b *Different mathematical precedence rules.* Rewriting and
     evaluating code. S3 classes for method dispatch.
 
