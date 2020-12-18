@@ -115,6 +115,9 @@ puzzles.
     Performance tricks.
 -   16a/b *Validating data and finding a satisfying assignment of
     names.* Book-keeping.
+-   17a/b  
+-   18a/b *Different mathematical precedence rules.* Rewriting and
+    evaluating code. S3 classes for method dispatch.
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.
