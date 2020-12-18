@@ -103,6 +103,8 @@ eval_new_math <- function(x) {
 
 
 eval_new_math_one <- function(x) {
+  # Alternatively, just temporarily redefine - as * and change * to -.
+  # https://github.com/moodymudskipper/adventofcode2020#day-18
   `%plus%`  <- function(x, y) x + y
   `%times%` <- function(x, y) x * y
 
