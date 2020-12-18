@@ -193,7 +193,6 @@
 #' @examples
 #' f17a()
 f17a <- function(x) {
-  # Maybe one great big preallocated array?
   x <- example_cube_state(1)
   x_num <- x %>%
     chartr(".", "0", .) %>%
@@ -203,25 +202,92 @@ f17a <- function(x) {
     as.numeric() %>%
     matrix(nrow = length(x), byrow = TRUE)
 
-  y_start <- length(x) + 7 * 2
-  x_start <- nchar(x[1]) + 7 * 2
-  z_start <- max(c(x_start, y_start))
+
+  # Maybe one great big preallocated array? All the commented out code has tried
+  # to set up this approach.
+
+  # No. Use a dataframe. Add neighbors for all locations with a 1. Filter down
+  # to just 1s. Join on/to neighbors. Count neighbors. Flip ones that satify
+  # conditions. Then add neighboors for all locations with a 1...
 
 
-  initial_ys <- seq(8, length.out = y_start - 14, by = 1)
-  initial_xs <- seq(8, length.out = x_start - 14, by = 1)
-  initial_zs <- median(seq(8, length.out = z_start - 14, by = 1))
+  # y_start <- length(x) + 7 * 2
+  # x_start <- nchar(x[1]) + 7 * 2
+  # z_start <- max(c(x_start, y_start))
+  #
+  # d <- expand.grid(
+  #   y = seq_len(y_start),
+  #   x = seq_len(x_start),
+  #   z = seq_len(z_start),
+  #   value = 0
+  # )
+  # d$tag <- paste(d$y, d$x, d$z, sep = "_")
+  #
+  # big_list <- d %>%
+  #   split(seq_len(nrow(d)))
+  #
+  # for (i in seq_along(x_num)) {
+  #   xi <- rep(8:10, 3)[i]
+  #   yi <- rep(8:10, each = 3)[i]
+  #   zi <- 9
+  #   d[d$x == xi & d$y == yi & d$z == zi, ] <- x_num[i]
+  # }
 
-  zeros <- rep(0, y_start * x_start * z_start)
+  # d
 
-  a <- array(
-    zeros,
-    dim = c(y_start, x_start, z_start),
-    list(y = seq_len(y_start), x = seq_len(x_start), z = seq_len(z_start))
-  )
+#   d[d$x ==  & d$y == rep(8:10, each = 3), ]
+#
+#
+#   rep(8:10, each = 3)
+#
+#
+#   zeros <- rep(0, y_start * x_start * z_start)
+#
+  # a <- array(
+  #   zeros,
+  #   dim = c(y_start, x_start, z_start),
+  #   list(y = seq_len(y_start), x = seq_len(x_start), z = seq_len(z_start))
+  # )
+  #
+  # initial_ys <- seq(8, length.out = y_start - 14, by = 1)
+  # initial_xs <- seq(8, length.out = x_start - 14, by = 1)
+  # initial_zs <- median(seq(8, length.out = z_start - 14, by = 1))
+  # a[initial_ys, initial_xs, initial_zs] <- x_num
+  #
+  # dimnames(a[initial_ys, initial_xs, initial_zs, drop = FALSE])
+  #
+  # m <- a[initial_ys, initial_xs, initial_zs, drop = FALSE] %>%
+  #   dimnames() %>%
+  #   expand.grid(stringsAsFactors = FALSE) %>%
+  #   as.matrix() %>%
+  #   as.numeric() %>%
+  #   matrix(ncol = 3)
+  # m <- m[-5, ]
+  # a[m]
+  #
+  #   # as.numeric() %>%
+  #   # matrix()
+  #
+  # # d
+  # # %>%
+  # #   lapply(as.numeric) %>% as.matrix()
+  # # a[d]
+  # #
+  # # array(a[initial_ys, initial_xs, initial_zs])
+  # #
 
-  a[initial_ys, initial_xs, initial_zs] <- x_num
-  a[, , initial_zs]
+#   x_num
+# /
+#
+#   x <- 8
+#   y <- 8
+#   z <- 8
+#
+#   get_cube_neighbors <- function(cube, x, y, z) {
+#     a
+#   }
+#
+#   a[, , initial_zs]
 
 
   #'     z=-1
