@@ -63,7 +63,7 @@ use_day <- function(day, year = 2020, open = interactive(), cookie = TRUE) {
   xml2::write_html(article, temp)
   z <- knitr::pandoc(temp, "markdown")
   lines <- readr::read_lines(z)
-  lines <- lines[-c(1, 2, 3)]
+  lines <- lines[-c(1, 2)]
   lines <- paste0("#' ", lines, collapse = "\n")
   data$part_1 <- lines
 
