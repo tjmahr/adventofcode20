@@ -1,3 +1,4 @@
 test_that("day 19", {
-  expect_equal(2 * 2, 4)
+  example_message(1) %>% check_messages() %>% sum() %>% expect_equal(2)
+  example_message(2) %>% check_messages() %>% sum() %>% expect_equal(2)
 })
