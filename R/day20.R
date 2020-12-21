@@ -199,16 +199,118 @@
 #'
 #' **Part Two**
 #'
-#' *(Use have to manually add this yourself.)*
+#' Now, you\'re ready to *check the image for sea monsters*.
 #'
-#' *(Try using `convert_clipboard_html_to_roxygen_md()`)*
+#' The borders of each tile are not part of the actual image; start by
+#' removing them.
+#'
+#' In the example above, the tiles become:
+#'
+#'     .#.#..#. ##...#.# #..#####
+#'     ###....# .#....#. .#......
+#'     ##.##.## #.#.#..# #####...
+#'     ###.#### #...#.## ###.#..#
+#'     ##.#.... #.##.### #...#.##
+#'     ...##### ###.#... .#####.#
+#'     ....#..# ...##..# .#.###..
+#'     .####... #..#.... .#......
+#'
+#'     #..#.##. .#..###. #.##....
+#'     #.####.. #.####.# .#.###..
+#'     ###.#.#. ..#.#### ##.#..##
+#'     #.####.. ..##..## ######.#
+#'     ##..##.# ...#...# .#.#.#..
+#'     ...#..#. .#.#.##. .###.###
+#'     .#.#.... #.##.#.. .###.##.
+#'     ###.#... #..#.##. ######..
+#'
+#'     .#.#.### .##.##.# ..#.##..
+#'     .####.## #.#...## #.#..#.#
+#'     ..#.#..# ..#.#.#. ####.###
+#'     #..####. ..#.#.#. ###.###.
+#'     #####..# ####...# ##....##
+#'     #.##..#. .#...#.. ####...#
+#'     .#.###.. ##..##.. ####.##.
+#'     ...###.. .##...#. ..#..###
+#'
+#' Remove the gaps to form the actual image:
+#'
+#'     .#.#..#.##...#.##..#####
+#'     ###....#.#....#..#......
+#'     ##.##.###.#.#..######...
+#'     ###.#####...#.#####.#..#
+#'     ##.#....#.##.####...#.##
+#'     ...########.#....#####.#
+#'     ....#..#...##..#.#.###..
+#'     .####...#..#.....#......
+#'     #..#.##..#..###.#.##....
+#'     #.####..#.####.#.#.###..
+#'     ###.#.#...#.######.#..##
+#'     #.####....##..########.#
+#'     ##..##.#...#...#.#.#.#..
+#'     ...#..#..#.#.##..###.###
+#'     .#.#....#.##.#...###.##.
+#'     ###.#...#..#.##.######..
+#'     .#.#.###.##.##.#..#.##..
+#'     .####.###.#...###.#..#.#
+#'     ..#.#..#..#.#.#.####.###
+#'     #..####...#.#.#.###.###.
+#'     #####..#####...###....##
+#'     #.##..#..#...#..####...#
+#'     .#.###..##..##..####.##.
+#'     ...###...##...#...#..###
+#'
+#' Now, you\'re ready to search for sea monsters! Because your image is
+#' monochrome, a sea monster will look like this:
+#'
+#'                       #
+#'     #    ##    ##    ###
+#'      #  #  #  #  #  #
+#'
+#' When looking for this pattern in the image, *the spaces can be
+#' anything*; only the `#` need to match. Also, you might need to rotate or
+#' flip your image before it\'s oriented correctly to find sea monsters. In
+#' the above image, *after flipping and rotating it* to the appropriate
+#' orientation, there are *two* sea monsters (marked with `O`):
+#'
+#'     .####...#####..#...###..
+#'     #####..#..#.#.####..#.#.
+#'     .#.#...#.###...#.##.O#..
+#'     #.O.##.OO#.#.OO.##.OOO##
+#'     ..#O.#O#.O##O..O.#O##.##
+#'     ...#.#..##.##...#..#..##
+#'     #.##.#..#.#..#..##.#.#..
+#'     .###.##.....#...###.#...
+#'     #.####.#.#....##.#..#.#.
+#'     ##...#..#....#..#...####
+#'     ..#.##...###..#.#####..#
+#'     ....#.##.#.#####....#...
+#'     ..##.##.###.....#.##..#.
+#'     #...#...###..####....##.
+#'     .#.##...#.##.#.#.###...#
+#'     #.###.#..####...##..#...
+#'     #.###...#.##...#.##O###.
+#'     .O##.#OO.###OO##..OOO##.
+#'     ..O#.O..O..O.#O##O##.###
+#'     #.#..##.########..#..##.
+#'     #.#####..#.#...##..#....
+#'     #....##..#.#########..##
+#'     #...#.....#..##...###.##
+#'     #..###....##.#...##.##.#
+#'
+#' Determine how rough the waters are in the sea monsters\' habitat by
+#' counting the number of `#` that are *not* part of a sea monster. In the
+#' above example, the habitat\'s water roughness is *`273`*.
+#'
+#' *How many `#` are not part of a sea monster?*
 #'
 #' @param x some data
-#' @return For Part One, `f20a(x)` returns .... For Part Two,
-#'   `f20b(x)` returns ....
+#' @return For Part One, `count_compatible_map_tile_edges(x)` returns a list with
+#'   possible edges of tile and how many times that edge appears in the list of
+#'   all possible walls.... For Part Two, `f20b(x)` returns ....
 #' @export
 #' @examples
-#' assemble_map_tiles(example_map_tiles())
+#' count_compatible_map_tile_edges(example_map_tiles())
 #'
 assemble_map_tiles <- function(x) {
 
@@ -216,23 +318,30 @@ assemble_map_tiles <- function(x) {
 
 
 
-f20b <- function(x) {
-  x <- example_map_tiles(1)
+
+#' @rdname day20
+#' @export
+find_map_corners <- function(x) {
+  x %>%
+    count_compatible_map_tile_edges() %>%
+    lapply(table) %>%
+    keep_if(function(x) x["2"] == 4) %>%
+    names() %>%
+    as.numeric()
+}
+
+
+#' @rdname day20
+#' @export
+count_compatible_map_tile_edges <- function(x) {
+  # x <- example_map_tiles(1)
   x <- prepare_map_tiles(x)
-
-  m <- x[[1]]
-
-  x[["2729"]][, 10]
-  x[["1427"]][, 1]
-
-  x[["1427"]][, 10]
-  rev(x[["2473"]][, 10])
 
   edges <- x %>%
     lapply(
       function(m) {
-        tb <- m[, c(1, ncol(m))]
-        lr <- t(m[c(1, nrow(m)), ])
+        tb <-   m[             , c(1, ncol(m))]
+        lr <- t(m[c(1, nrow(m)),              ])
         cbind(tb, lr) %>%
           # reversed copies of the columns
           apply(2, paste0, collapse = "") %>%
@@ -241,8 +350,16 @@ f20b <- function(x) {
     )
   e <- edges %>% unlist(use.names = FALSE) %>% table() %>% unclass()
 
-  edges %>% lapply(function(x) e[x])
+  #'     1951    2311    3079
+  #'     2729    1427    2473
+  #'     2971    1489    1171
+  edge_counts <- edges %>% lapply(function(x) e[x])
 
+  # center all 2s
+  # corners have four 2s
+  # walls have three 2s
+
+  edge_counts
 }
 
 # invert_names <- function(xs) {

@@ -3,10 +3,16 @@
 \name{day20}
 \alias{day20}
 \alias{assemble_map_tiles}
+\alias{find_map_corners}
+\alias{count_compatible_map_tile_edges}
 \alias{example_map_tiles}
 \title{Day 20: Jurassic Jigsaw}
 \usage{
 assemble_map_tiles(x)
+
+find_map_corners(x)
+
+count_compatible_map_tile_edges(x)
 
 example_map_tiles(example = 1)
 }
@@ -17,8 +23,9 @@ example_map_tiles(example = 1)
 1.}
 }
 \value{
-For Part One, \code{f20a(x)} returns .... For Part Two,
-\code{f20b(x)} returns ....
+For Part One, \code{count_compatible_map_tile_edges(x)} returns a list with
+possible edges of tile and how many times that edge appears in the list of
+all possible walls.... For Part Two, \code{f20b(x)} returns ....
 }
 \description{
 \href{https://adventofcode.com/2020/day/20}{Jurassic Jigsaw}
@@ -219,6 +226,6 @@ together the IDs of the four corner tiles?}
 \emph{(Try using \code{convert_clipboard_html_to_roxygen_md()})}
 }
 \examples{
-assemble_map_tiles(example_map_tiles())
+count_compatible_map_tile_edges(example_map_tiles())
 
 }
