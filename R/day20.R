@@ -208,9 +208,9 @@
 #'   `f20b(x)` returns ....
 #' @export
 #' @examples
-#' f20a(example_data_20())
+#' assemble_map_tiles(example_map_tiles())
 #'
-f20a <- function(x) {
+assemble_map_tiles <- function(x) {
 
 }
 
@@ -221,17 +221,33 @@ f20b <- function(x) {
   x <- prepare_map_tiles(x)
 
   m <- x[[1]]
-  long_edges <- x %>%
+
+  x[["2729"]][, 10]
+  x[["1427"]][, 1]
+
+  x[["1427"]][, 10]
+  rev(x[["2473"]][, 10])
+
+  edges <- x %>%
     lapply(
       function(m) {
-        m[, c(1, ncol(m))] %>%
+        tb <- m[, c(1, ncol(m))]
+        lr <- t(m[c(1, nrow(m)), ])
+        cbind(tb, lr) %>%
           # reversed copies of the columns
-          cbind(m[rev(seq_len(nrow(m))), c(1, ncol(m))]) %>%
-          apply(2, paste0, collapse = "")
+          apply(2, paste0, collapse = "") %>%
+          c(., stringi::stri_reverse(.))
       }
     )
-  long_edges
+  e <- edges %>% unlist(use.names = FALSE) %>% table() %>% unclass()
+
+  edges %>% lapply(function(x) e[x])
+
 }
+
+# invert_names <- function(xs) {
+#   stats::setNames(names(xs), xs)
+# }
 
 
 prepare_map_tiles <- function(x) {
@@ -249,6 +265,8 @@ prepare_map_tiles <- function(x) {
     lapply2(last_lines, seq) %>%
     lapply(function(l) x[l]) %>%
     lapply(strsplit, "") %>%
+    # lapply(unlist) %>%
+    # lapply(matrix, ncol = nchar(x[2]), byrow = TRUE) %>%
     lapply(function(x) do.call(rbind, x)) %>%
     stats::setNames(numbers)
 
@@ -374,4 +392,3 @@ example_map_tiles <- function(example = 1) {
   )
   l[[example]]
 }
-
