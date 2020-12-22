@@ -110,19 +110,21 @@ puzzles.
 -   12a/b *Moving a point around or along a vector:* Recursion. Math
     (rotation matrix).
 -   13a/b *Find bus arrival times:* Math (Chinese remainder theorem).
--   14a/b *Masking bits* Math (binary).
--   15a/b *Keeping track of previous operations* Book-keeping.
+-   14a/b *Masking bits:* Math (binary).
+-   15a/b *Keeping track of previous operations:* Book-keeping.
     Performance tricks.
 -   16a/b *Validating data and finding a satisfying assignment of
-    names.* Book-keeping.
+    names:* Book-keeping.
 -   17a/b *A 3D Game of Life-like simulation:* Table joins.
--   18a/b *Different mathematical precedence rules.* Rewriting and
+-   18a/b *Different mathematical precedence rules:* Rewriting and
     evaluating code. S3 classes for method dispatch.
 -   19a/b
 -   20a/b
 -   21a/b *Deducing which values goes together by process of
-    elimination* Logical resolution (making an inference and adding the
+    elimination:* Logical resolution (making an inference and adding the
     inference to a list of clauses).
+-   22a/b *Sorting a deck of cards / Playing a recursive card game:*
+    Recursion.
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.

@@ -532,7 +532,7 @@ create_cube_neighbors <- function(row) {
 find_new_cube_cells <- function(data) {
   # Get the new neighbors for each occupied cell
   all_neighbors <- data %>%
-    filter_rows_in(value == 1, !neighbors_added) %>%
+    filter_rows_in(.data$value == 1, !.data$neighbors_added) %>%
     split(seq_len(nrow(.))) %>%
     lapply(create_cube_neighbors) %>%
     do.call(rbind, .) %>%

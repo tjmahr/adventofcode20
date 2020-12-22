@@ -309,7 +309,7 @@
 #'   corners.... For Part Two, `f20b(x)` returns ....
 #' @export
 #' @examples
-#' count_compatible_map_tile_edges(example_map_tiles())
+#' find_map_corners(example_map_tiles())
 assemble_map_tiles <- function(x) {
   x <- example_map_tiles()
   tiles <- prepare_map_tiles(x)

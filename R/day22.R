@@ -138,17 +138,325 @@
 #'
 #' **Part Two**
 #'
-#' *(Use have to manually add this yourself.)*
+#' You lost to the small crab! Fortunately, crabs aren\'t very good at
+#' recursion. To defend your honor as a Raft Captain, you challenge the
+#' small crab to a game of
+#' *[Recursive]{title="For some reason, nobody wants to play Recursive Twilight Imperium with me."}
+#' Combat*.
 #'
-#' *(Try using `convert_clipboard_html_to_roxygen_md()`)*
+#' Recursive Combat still starts by splitting the cards into two decks (you
+#' offer to play with the same starting decks as before - it\'s only fair).
+#' Then, the game consists of a series of *rounds* with a few changes:
+#'
+#' -   Before either player deals a card, if there was a previous round in
+#'     this game that had exactly the same cards in the same order in the
+#'     same players\' decks, the *game* instantly ends in a win for
+#'     player 1. Previous rounds from other games are not considered. (This
+#'     prevents infinite games of Recursive Combat, which everyone agrees
+#'     is a bad idea.)
+#' -   Otherwise, this round\'s cards must be in a new configuration; the
+#'     players begin the round by each drawing the top card of their deck
+#'     as normal.
+#' -   If both players have at least as many cards remaining in their deck
+#'     as the value of the card they just drew, the winner of the round is
+#'     determined by playing a new game of Recursive Combat (see below).
+#' -   Otherwise, at least one player must not have enough cards left in
+#'     their deck to recurse; the winner of the round is the player with
+#'     the higher-value card.
+#'
+#' As in regular Combat, the winner of the round (even if they won the
+#' round by winning a sub-game) takes the two cards dealt at the beginning
+#' of the round and places them on the bottom of their own deck (again so
+#' that the winner\'s card is above the other card). Note that the
+#' winner\'s card might be *the lower-valued of the two cards* if they won
+#' the round due to winning a sub-game. If collecting cards by winning the
+#' round causes a player to have all of the cards, they win, and the game
+#' ends.
+#'
+#' Here is an example of a small game that would loop forever without the
+#' infinite game prevention rule:
+#'
+#'     Player 1:
+#'     43
+#'     19
+#'
+#'     Player 2:
+#'     2
+#'     29
+#'     14
+#'
+#' During a round of Recursive Combat, if both players have at least as
+#' many cards in their own decks as the number on the card they just dealt,
+#' the winner of the round is determined by recursing into a sub-game of
+#' Recursive Combat. (For example, if player 1 draws the `3` card, and
+#' player 2 draws the `7` card, this would occur if player 1 has at least 3
+#' cards left and player 2 has at least 7 cards left, not counting the `3`
+#' and `7` cards that were drawn.)
+#'
+#' To play a sub-game of Recursive Combat, each player creates a new deck
+#' by making a *copy* of the next cards in their deck (the quantity of
+#' cards copied is equal to the number on the card they drew to trigger the
+#' sub-game). During this sub-game, the game that triggered it is on hold
+#' and completely unaffected; no cards are removed from players\' decks to
+#' form the sub-game. (For example, if player 1 drew the `3` card, their
+#' deck in the sub-game would be *copies* of the next three cards in their
+#' deck.)
+#'
+#' Here is a complete example of gameplay, where `Game 1` is the primary
+#' game of Recursive Combat:
+#'
+#'     === Game 1 ===
+#'
+#'     -- Round 1 (Game 1) --
+#'     Player 1's deck: 9, 2, 6, 3, 1
+#'     Player 2's deck: 5, 8, 4, 7, 10
+#'     Player 1 plays: 9
+#'     Player 2 plays: 5
+#'     Player 1 wins round 1 of game 1!
+#'
+#'     -- Round 2 (Game 1) --
+#'     Player 1's deck: 2, 6, 3, 1, 9, 5
+#'     Player 2's deck: 8, 4, 7, 10
+#'     Player 1 plays: 2
+#'     Player 2 plays: 8
+#'     Player 2 wins round 2 of game 1!
+#'
+#'     -- Round 3 (Game 1) --
+#'     Player 1's deck: 6, 3, 1, 9, 5
+#'     Player 2's deck: 4, 7, 10, 8, 2
+#'     Player 1 plays: 6
+#'     Player 2 plays: 4
+#'     Player 1 wins round 3 of game 1!
+#'
+#'     -- Round 4 (Game 1) --
+#'     Player 1's deck: 3, 1, 9, 5, 6, 4
+#'     Player 2's deck: 7, 10, 8, 2
+#'     Player 1 plays: 3
+#'     Player 2 plays: 7
+#'     Player 2 wins round 4 of game 1!
+#'
+#'     -- Round 5 (Game 1) --
+#'     Player 1's deck: 1, 9, 5, 6, 4
+#'     Player 2's deck: 10, 8, 2, 7, 3
+#'     Player 1 plays: 1
+#'     Player 2 plays: 10
+#'     Player 2 wins round 5 of game 1!
+#'
+#'     -- Round 6 (Game 1) --
+#'     Player 1's deck: 9, 5, 6, 4
+#'     Player 2's deck: 8, 2, 7, 3, 10, 1
+#'     Player 1 plays: 9
+#'     Player 2 plays: 8
+#'     Player 1 wins round 6 of game 1!
+#'
+#'     -- Round 7 (Game 1) --
+#'     Player 1's deck: 5, 6, 4, 9, 8
+#'     Player 2's deck: 2, 7, 3, 10, 1
+#'     Player 1 plays: 5
+#'     Player 2 plays: 2
+#'     Player 1 wins round 7 of game 1!
+#'
+#'     -- Round 8 (Game 1) --
+#'     Player 1's deck: 6, 4, 9, 8, 5, 2
+#'     Player 2's deck: 7, 3, 10, 1
+#'     Player 1 plays: 6
+#'     Player 2 plays: 7
+#'     Player 2 wins round 8 of game 1!
+#'
+#'     -- Round 9 (Game 1) --
+#'     Player 1's deck: 4, 9, 8, 5, 2
+#'     Player 2's deck: 3, 10, 1, 7, 6
+#'     Player 1 plays: 4
+#'     Player 2 plays: 3
+#'     Playing a sub-game to determine the winner...
+#'
+#'     === Game 2 ===
+#'
+#'     -- Round 1 (Game 2) --
+#'     Player 1's deck: 9, 8, 5, 2
+#'     Player 2's deck: 10, 1, 7
+#'     Player 1 plays: 9
+#'     Player 2 plays: 10
+#'     Player 2 wins round 1 of game 2!
+#'
+#'     -- Round 2 (Game 2) --
+#'     Player 1's deck: 8, 5, 2
+#'     Player 2's deck: 1, 7, 10, 9
+#'     Player 1 plays: 8
+#'     Player 2 plays: 1
+#'     Player 1 wins round 2 of game 2!
+#'
+#'     -- Round 3 (Game 2) --
+#'     Player 1's deck: 5, 2, 8, 1
+#'     Player 2's deck: 7, 10, 9
+#'     Player 1 plays: 5
+#'     Player 2 plays: 7
+#'     Player 2 wins round 3 of game 2!
+#'
+#'     -- Round 4 (Game 2) --
+#'     Player 1's deck: 2, 8, 1
+#'     Player 2's deck: 10, 9, 7, 5
+#'     Player 1 plays: 2
+#'     Player 2 plays: 10
+#'     Player 2 wins round 4 of game 2!
+#'
+#'     -- Round 5 (Game 2) --
+#'     Player 1's deck: 8, 1
+#'     Player 2's deck: 9, 7, 5, 10, 2
+#'     Player 1 plays: 8
+#'     Player 2 plays: 9
+#'     Player 2 wins round 5 of game 2!
+#'
+#'     -- Round 6 (Game 2) --
+#'     Player 1's deck: 1
+#'     Player 2's deck: 7, 5, 10, 2, 9, 8
+#'     Player 1 plays: 1
+#'     Player 2 plays: 7
+#'     Player 2 wins round 6 of game 2!
+#'     The winner of game 2 is player 2!
+#'
+#'     ...anyway, back to game 1.
+#'     Player 2 wins round 9 of game 1!
+#'
+#'     -- Round 10 (Game 1) --
+#'     Player 1's deck: 9, 8, 5, 2
+#'     Player 2's deck: 10, 1, 7, 6, 3, 4
+#'     Player 1 plays: 9
+#'     Player 2 plays: 10
+#'     Player 2 wins round 10 of game 1!
+#'
+#'     -- Round 11 (Game 1) --
+#'     Player 1's deck: 8, 5, 2
+#'     Player 2's deck: 1, 7, 6, 3, 4, 10, 9
+#'     Player 1 plays: 8
+#'     Player 2 plays: 1
+#'     Player 1 wins round 11 of game 1!
+#'
+#'     -- Round 12 (Game 1) --
+#'     Player 1's deck: 5, 2, 8, 1
+#'     Player 2's deck: 7, 6, 3, 4, 10, 9
+#'     Player 1 plays: 5
+#'     Player 2 plays: 7
+#'     Player 2 wins round 12 of game 1!
+#'
+#'     -- Round 13 (Game 1) --
+#'     Player 1's deck: 2, 8, 1
+#'     Player 2's deck: 6, 3, 4, 10, 9, 7, 5
+#'     Player 1 plays: 2
+#'     Player 2 plays: 6
+#'     Playing a sub-game to determine the winner...
+#'
+#'     === Game 3 ===
+#'
+#'     -- Round 1 (Game 3) --
+#'     Player 1's deck: 8, 1
+#'     Player 2's deck: 3, 4, 10, 9, 7, 5
+#'     Player 1 plays: 8
+#'     Player 2 plays: 3
+#'     Player 1 wins round 1 of game 3!
+#'
+#'     -- Round 2 (Game 3) --
+#'     Player 1's deck: 1, 8, 3
+#'     Player 2's deck: 4, 10, 9, 7, 5
+#'     Player 1 plays: 1
+#'     Player 2 plays: 4
+#'     Playing a sub-game to determine the winner...
+#'
+#'     === Game 4 ===
+#'
+#'     -- Round 1 (Game 4) --
+#'     Player 1's deck: 8
+#'     Player 2's deck: 10, 9, 7, 5
+#'     Player 1 plays: 8
+#'     Player 2 plays: 10
+#'     Player 2 wins round 1 of game 4!
+#'     The winner of game 4 is player 2!
+#'
+#'     ...anyway, back to game 3.
+#'     Player 2 wins round 2 of game 3!
+#'
+#'     -- Round 3 (Game 3) --
+#'     Player 1's deck: 8, 3
+#'     Player 2's deck: 10, 9, 7, 5, 4, 1
+#'     Player 1 plays: 8
+#'     Player 2 plays: 10
+#'     Player 2 wins round 3 of game 3!
+#'
+#'     -- Round 4 (Game 3) --
+#'     Player 1's deck: 3
+#'     Player 2's deck: 9, 7, 5, 4, 1, 10, 8
+#'     Player 1 plays: 3
+#'     Player 2 plays: 9
+#'     Player 2 wins round 4 of game 3!
+#'     The winner of game 3 is player 2!
+#'
+#'     ...anyway, back to game 1.
+#'     Player 2 wins round 13 of game 1!
+#'
+#'     -- Round 14 (Game 1) --
+#'     Player 1's deck: 8, 1
+#'     Player 2's deck: 3, 4, 10, 9, 7, 5, 6, 2
+#'     Player 1 plays: 8
+#'     Player 2 plays: 3
+#'     Player 1 wins round 14 of game 1!
+#'
+#'     -- Round 15 (Game 1) --
+#'     Player 1's deck: 1, 8, 3
+#'     Player 2's deck: 4, 10, 9, 7, 5, 6, 2
+#'     Player 1 plays: 1
+#'     Player 2 plays: 4
+#'     Playing a sub-game to determine the winner...
+#'
+#'     === Game 5 ===
+#'
+#'     -- Round 1 (Game 5) --
+#'     Player 1's deck: 8
+#'     Player 2's deck: 10, 9, 7, 5
+#'     Player 1 plays: 8
+#'     Player 2 plays: 10
+#'     Player 2 wins round 1 of game 5!
+#'     The winner of game 5 is player 2!
+#'
+#'     ...anyway, back to game 1.
+#'     Player 2 wins round 15 of game 1!
+#'
+#'     -- Round 16 (Game 1) --
+#'     Player 1's deck: 8, 3
+#'     Player 2's deck: 10, 9, 7, 5, 6, 2, 4, 1
+#'     Player 1 plays: 8
+#'     Player 2 plays: 10
+#'     Player 2 wins round 16 of game 1!
+#'
+#'     -- Round 17 (Game 1) --
+#'     Player 1's deck: 3
+#'     Player 2's deck: 9, 7, 5, 6, 2, 4, 1, 10, 8
+#'     Player 1 plays: 3
+#'     Player 2 plays: 9
+#'     Player 2 wins round 17 of game 1!
+#'     The winner of game 1 is player 2!
+#'
+#'
+#'     == Post-game results ==
+#'     Player 1's deck:
+#'     Player 2's deck: 7, 5, 6, 2, 4, 1, 10, 8, 9, 3
+#'
+#' After the game, the winning player\'s score is calculated from the cards
+#' they have in their original deck using the same rules as regular Combat.
+#' In the above game, the winning player\'s score is *`291`*.
+#'
+#' Defend your honor as Raft Captain by playing the small crab in a game of
+#' Recursive Combat using the same two decks as before. *What is the
+#' winning player\'s score?*
 #'
 #' @param x some data
-#' @return For Part One, `f22a(x)` returns .... For Part Two,
-#'   `f22b(x)` returns ....
+#' @return For Part One, `sort_card_decks(x)` returns the results of the game in
+#'   a list along with some metadata.... For Part Two,
+#'   `play_recursive_combat_game(x)` plays the game described above and returns
+#'   the result in a list.
 #' @export
 #' @examples
 #' sort_card_decks(example_card_decks())
-#' f22b()
+#' play_recursive_combat_game(example_card_decks())
 sort_card_decks <- function(x) {
   play_turns <- function(game) {
     if (any(lengths(game) == 0)) {
@@ -167,20 +475,114 @@ sort_card_decks <- function(x) {
       }
 
       game$.round <- game$.round + 1
-      result <- play_turns(game)
+      result <- Recall(game)
     }
     result
   }
-  x <- example_card_decks(1)
+
   game <- prepare_card_decks(x)
-  play_turns(game)
+  game <- play_turns(game)
+  weights <- seq(max(lengths(game[c("p1", "p2")])), to = 1, by = -1)
+  game$.score <- sum(c(weights * game$p1, weights * game$p2))
+  game
 }
 
 
 #' @rdname day22
 #' @export
-f22b <- function(x) {
+play_recursive_combat_game <- function(x) {
+  game <- prepare_card_decks(x)
 
+  while (game$.winner == "") {
+    # message(tag_combat_turn(game))
+    game <- play_recursive_combat_turn(game)
+
+  }
+
+  points <- game[[game$.winner]]
+  weights <- rev(seq_along(points))
+  game$.score <- sum(weights * points)
+  game
+}
+
+
+play_recursive_combat_turn <- function(game) {
+  turn_winner <- ""
+
+  if (has_all_combat_cards(game)) {
+    game$.winner <- names(which.max(lengths(game[c("p1", "p2")])))
+    return(game)
+  }
+
+  if (has_seen_combat_turn(game)) {
+    game$.winner <- "p1"
+    return(game)
+  }
+
+  game <- record_combat_turn(game)
+
+  # Recursive call
+  if (is_combat_subgame_required(game)) {
+    p1_seq <- seq(from = 2, length.out = game$p1[1], by = 1)
+    p2_seq <- seq(from = 2, length.out = game$p2[1], by = 1)
+
+    new_game <- serialize_combat_game(game$p1[p1_seq], game$p2[p2_seq])
+    new_game <- play_recursive_combat_game(new_game)
+    turn_winner <- new_game$.winner
+  }
+
+  if (turn_winner == "") {
+    turn_winner <- ifelse(game$p1[1] > game$p2[1], "p1", "p2")
+  }
+
+  # Give cards to turn winner
+  turn_loser <- setdiff(c("p1", "p2"), turn_winner)
+  tops <- c(game[[turn_winner]][1], game[[turn_loser]][1])
+  game$p1 <- game$p1[-1]
+  game$p2 <- game$p2[-1]
+  game[[turn_winner]] <- c(game[[turn_winner]], tops)
+  game
+}
+
+
+serialize_combat_game <- function(p1, p2) {
+  c("Player 1:", p1, "", "Player 2:", p2)
+}
+
+
+has_all_combat_cards <- function(game) {
+  any(lengths(game[c("p1", "p2")]) == 0)
+}
+
+
+has_seen_combat_turn <- function(game) {
+  tag_combat_turn(game) %in% game$.history[seq_len(game$.round)]
+}
+
+
+is_combat_subgame_required <- function(game) {
+  p1_length <- game$p1[1] <= length(game$p1[-1])
+  p2_length <- game$p2[1] <= length(game$p2[-1])
+  p1_length & p2_length
+}
+
+
+record_combat_turn <- function(game) {
+  game$.round <- game$.round + 1
+  if (length(game$.history) < game$.round) {
+    game$.history <- c(game$.history, character(10))
+  }
+  game$.history[game$.round] <- tag_combat_turn(game)
+  game
+}
+
+
+tag_combat_turn <- function(game) {
+  paste0(
+    paste0(game$p1, collapse = " "),
+    " _ ",
+    paste0(game$p2, collapse = " ")
+  )
 }
 
 
@@ -190,7 +592,9 @@ prepare_card_decks <- function(x) {
     lapply(function(x) x[-1]) %>%
     lapply(as.numeric) %>%
     stats::setNames(c("p1", "p2"))
-  game$.round <- 1
+  game$.round <- 0
+  game$.history <- character(10)
+  game$.winner <- ""
   game
 }
 

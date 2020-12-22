@@ -319,5 +319,5 @@ above example, the habitat\'s water roughness is \emph{\code{273}}.
 \emph{How many \verb{#} are not part of a sea monster?}
 }
 \examples{
-count_compatible_map_tile_edges(example_map_tiles())
+find_map_corners(example_map_tiles())
 }
