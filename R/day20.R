@@ -313,7 +313,36 @@
 #' count_compatible_map_tile_edges(example_map_tiles())
 #'
 assemble_map_tiles <- function(x) {
+  x <- example_map_tiles()
+  tiles <- prepare_map_tiles(x)
 
+  edge_counts <- count_compatible_map_tile_edges(x)
+  edge_list <- edge_counts %>% lapply(function(x) names(x))
+
+  corners <- find_map_corners(x) %>% as.character()
+
+  first_corner <- corners[1]
+
+  tiles[[first_corner]]
+
+  edge_counts[[first_corner]]
+
+  tile <- first_corner
+  find_neighbors <- function(tile, edge_list, tile_list) {
+
+    on_corner1 <- edge_list %>%
+      keep_if(function(x) any(x %in% edge_list[[tile]]))
+    on_corner1
+
+    tile
+
+  }
+  edges[corners][[1]]
+  edges[corners][[4]]
+
+
+
+  tiles[names(on_corner1)]
 }
 
 
