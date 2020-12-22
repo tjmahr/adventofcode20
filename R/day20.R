@@ -305,13 +305,11 @@
 #' *How many `#` are not part of a sea monster?*
 #'
 #' @param x some data
-#' @return For Part One, `count_compatible_map_tile_edges(x)` returns a list with
-#'   possible edges of tile and how many times that edge appears in the list of
-#'   all possible walls.... For Part Two, `f20b(x)` returns ....
+#' @return For Part One, `find_map_corners(x)` return the IDs of the map
+#'   corners.... For Part Two, `f20b(x)` returns ....
 #' @export
 #' @examples
 #' count_compatible_map_tile_edges(example_map_tiles())
-#'
 assemble_map_tiles <- function(x) {
   x <- example_map_tiles()
   tiles <- prepare_map_tiles(x)
@@ -359,9 +357,6 @@ find_map_corners <- function(x) {
     as.numeric()
 }
 
-
-#' @rdname day20
-#' @export
 count_compatible_map_tile_edges <- function(x) {
   # x <- example_map_tiles(1)
   x <- prepare_map_tiles(x)
@@ -379,9 +374,9 @@ count_compatible_map_tile_edges <- function(x) {
     )
   e <- edges %>% unlist(use.names = FALSE) %>% table() %>% unclass()
 
-  #'     1951    2311    3079
-  #'     2729    1427    2473
-  #'     2971    1489    1171
+  #     1951    2311    3079
+  #     2729    1427    2473
+  #     2971    1489    1171
   edge_counts <- edges %>% lapply(function(x) e[x])
 
   # center all 2s
@@ -390,10 +385,6 @@ count_compatible_map_tile_edges <- function(x) {
 
   edge_counts
 }
-
-# invert_names <- function(xs) {
-#   stats::setNames(names(xs), xs)
-# }
 
 
 prepare_map_tiles <- function(x) {

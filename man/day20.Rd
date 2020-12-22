@@ -4,15 +4,12 @@
 \alias{day20}
 \alias{assemble_map_tiles}
 \alias{find_map_corners}
-\alias{count_compatible_map_tile_edges}
 \alias{example_map_tiles}
 \title{Day 20: Jurassic Jigsaw}
 \usage{
 assemble_map_tiles(x)
 
 find_map_corners(x)
-
-count_compatible_map_tile_edges(x)
 
 example_map_tiles(example = 1)
 }
@@ -23,9 +20,8 @@ example_map_tiles(example = 1)
 1.}
 }
 \value{
-For Part One, \code{count_compatible_map_tile_edges(x)} returns a list with
-possible edges of tile and how many times that edge appears in the list of
-all possible walls.... For Part Two, \code{f20b(x)} returns ....
+For Part One, \code{find_map_corners(x)} return the IDs of the map
+corners.... For Part Two, \code{f20b(x)} returns ....
 }
 \description{
 \href{https://adventofcode.com/2020/day/20}{Jurassic Jigsaw}
@@ -221,11 +217,107 @@ together the IDs of the four corner tiles?}
 
 \strong{Part Two}
 
-\emph{(Use have to manually add this yourself.)}
+Now, you\'re ready to \emph{check the image for sea monsters}.
 
-\emph{(Try using \code{convert_clipboard_html_to_roxygen_md()})}
+The borders of each tile are not part of the actual image; start by
+removing them.
+
+In the example above, the tiles become:\preformatted{.#.#..#. ##...#.# #..#####
+###....# .#....#. .#......
+##.##.## #.#.#..# #####...
+###.#### #...#.## ###.#..#
+##.#.... #.##.### #...#.##
+...##### ###.#... .#####.#
+....#..# ...##..# .#.###..
+.####... #..#.... .#......
+
+#..#.##. .#..###. #.##....
+#.####.. #.####.# .#.###..
+###.#.#. ..#.#### ##.#..##
+#.####.. ..##..## ######.#
+##..##.# ...#...# .#.#.#..
+...#..#. .#.#.##. .###.###
+.#.#.... #.##.#.. .###.##.
+###.#... #..#.##. ######..
+
+.#.#.### .##.##.# ..#.##..
+.####.## #.#...## #.#..#.#
+..#.#..# ..#.#.#. ####.###
+#..####. ..#.#.#. ###.###.
+#####..# ####...# ##....##
+#.##..#. .#...#.. ####...#
+.#.###.. ##..##.. ####.##.
+...###.. .##...#. ..#..###
+}
+
+Remove the gaps to form the actual image:\preformatted{.#.#..#.##...#.##..#####
+###....#.#....#..#......
+##.##.###.#.#..######...
+###.#####...#.#####.#..#
+##.#....#.##.####...#.##
+...########.#....#####.#
+....#..#...##..#.#.###..
+.####...#..#.....#......
+#..#.##..#..###.#.##....
+#.####..#.####.#.#.###..
+###.#.#...#.######.#..##
+#.####....##..########.#
+##..##.#...#...#.#.#.#..
+...#..#..#.#.##..###.###
+.#.#....#.##.#...###.##.
+###.#...#..#.##.######..
+.#.#.###.##.##.#..#.##..
+.####.###.#...###.#..#.#
+..#.#..#..#.#.#.####.###
+#..####...#.#.#.###.###.
+#####..#####...###....##
+#.##..#..#...#..####...#
+.#.###..##..##..####.##.
+...###...##...#...#..###
+}
+
+Now, you\'re ready to search for sea monsters! Because your image is
+monochrome, a sea monster will look like this:\preformatted{                  #
+#    ##    ##    ###
+ #  #  #  #  #  #
+}
+
+When looking for this pattern in the image, \emph{the spaces can be
+anything}; only the \verb{#} need to match. Also, you might need to rotate or
+flip your image before it\'s oriented correctly to find sea monsters. In
+the above image, \emph{after flipping and rotating it} to the appropriate
+orientation, there are \emph{two} sea monsters (marked with \code{O}):\preformatted{.####...#####..#...###..
+#####..#..#.#.####..#.#.
+.#.#...#.###...#.##.O#..
+#.O.##.OO#.#.OO.##.OOO##
+..#O.#O#.O##O..O.#O##.##
+...#.#..##.##...#..#..##
+#.##.#..#.#..#..##.#.#..
+.###.##.....#...###.#...
+#.####.#.#....##.#..#.#.
+##...#..#....#..#...####
+..#.##...###..#.#####..#
+....#.##.#.#####....#...
+..##.##.###.....#.##..#.
+#...#...###..####....##.
+.#.##...#.##.#.#.###...#
+#.###.#..####...##..#...
+#.###...#.##...#.##O###.
+.O##.#OO.###OO##..OOO##.
+..O#.O..O..O.#O##O##.###
+#.#..##.########..#..##.
+#.#####..#.#...##..#....
+#....##..#.#########..##
+#...#.....#..##...###.##
+#..###....##.#...##.##.#
+}
+
+Determine how rough the waters are in the sea monsters\' habitat by
+counting the number of \verb{#} that are \emph{not} part of a sea monster. In the
+above example, the habitat\'s water roughness is \emph{\code{273}}.
+
+\emph{How many \verb{#} are not part of a sea monster?}
 }
 \examples{
 count_compatible_map_tile_edges(example_map_tiles())
-
 }
