@@ -526,9 +526,16 @@ play_recursive_combat_turn <- function(game) {
     p1_seq <- seq(from = 2, length.out = game$p1[1], by = 1)
     p2_seq <- seq(from = 2, length.out = game$p2[1], by = 1)
 
-    new_game <- serialize_combat_game(game$p1[p1_seq], game$p2[p2_seq])
-    new_game <- play_recursive_combat_game(new_game)
-    turn_winner <- new_game$.winner
+    # Shortcut: https://selbydavid.com/2020/12/06/advent-2020/#day22
+    # If player 1 has largest card, they can never hand it to player 2,
+    # so they can never lose.
+    if (max(game$p1[p1_seq]) > max(game$p2[p2_seq])) {
+      turn_winner <- "p1"
+    } else {
+      new_game <- serialize_combat_game(game$p1[p1_seq], game$p2[p2_seq])
+      new_game <- play_recursive_combat_game(new_game)
+      turn_winner <- new_game$.winner
+    }
   }
 
   if (turn_winner == "") {
@@ -570,7 +577,7 @@ is_combat_subgame_required <- function(game) {
 record_combat_turn <- function(game) {
   game$.round <- game$.round + 1
   if (length(game$.history) < game$.round) {
-    game$.history <- c(game$.history, character(10))
+    game$.history <- c(game$.history, character(200))
   }
   game$.history[game$.round] <- tag_combat_turn(game)
   game
@@ -593,7 +600,7 @@ prepare_card_decks <- function(x) {
     lapply(as.numeric) %>%
     stats::setNames(c("p1", "p2"))
   game$.round <- 0
-  game$.history <- character(10)
+  game$.history <- character(200)
   game$.winner <- ""
   game
 }
