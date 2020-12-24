@@ -45,7 +45,7 @@ aoc20_solutions <- list(
   day21b = "pgnpx,srmsh,ksdgk,dskjpq,nvbrx,khqsk,zbkbgp,xzb",
   day22a = 32629,
   day22b = 32519,
-  day23a = NA,
+  day23a = 89372645,
   day23b = NA,
   day24a = NA,
   day24b = NA,
