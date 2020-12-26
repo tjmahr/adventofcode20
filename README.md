@@ -125,6 +125,11 @@ puzzles.
     inference to a list of clauses).
 -   22a/b *Sorting a deck of cards / Playing a recursive card game:*
     Recursion.
+-   23a *Shuffling a list of numbers with weird rules:* Math (modular
+    arithmetic).
+-   23b
+-   24a *Walking along a hexagonal grid:* Lookup tables.
+-   24b
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.
