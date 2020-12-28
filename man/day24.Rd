@@ -3,13 +3,10 @@
 \name{day24}
 \alias{day24}
 \alias{flip_hex_tiles}
-\alias{f24b}
 \alias{example_hex_tiles}
 \title{Day 24: Lobby Layout}
 \usage{
 flip_hex_tiles(x)
-
-f24b(x)
 
 example_hex_tiles(example = 1)
 }
@@ -95,11 +92,51 @@ many tiles are left with the black side up?}
 
 \strong{Part Two}
 
-\emph{(Use have to manually add this yourself.)}
+The tile floor in the lobby is meant to be a [living art
+exhibit]{title="I need one of these!"}. Every day, the tiles are all
+flipped according to the following rules:
+\itemize{
+\item Any \emph{black} tile with \emph{zero} or \emph{more than 2} black tiles
+immediately adjacent to it is flipped to \emph{white}.
+\item Any \emph{white} tile with \emph{exactly 2} black tiles immediately adjacent
+to it is flipped to \emph{black}.
+}
 
-\emph{(Try using \code{convert_clipboard_html_to_roxygen_md()})}
+Here, \emph{tiles immediately adjacent} means the six tiles directly touching
+the tile in question.
+
+The rules are applied \emph{simultaneously} to every tile; put another way,
+it is first determined which tiles need to be flipped, then they are all
+flipped at the same time.
+
+In the above example, the number of black tiles that are facing up after
+the given number of days has passed is as follows:\preformatted{Day 1: 15
+Day 2: 12
+Day 3: 25
+Day 4: 14
+Day 5: 23
+Day 6: 28
+Day 7: 41
+Day 8: 37
+Day 9: 49
+Day 10: 37
+
+Day 20: 132
+Day 30: 259
+Day 40: 406
+Day 50: 566
+Day 60: 788
+Day 70: 1106
+Day 80: 1373
+Day 90: 1844
+Day 100: 2208
+}
+
+After executing this process a total of 100 times, there would be
+\emph{\code{2208}} black tiles facing up.
+
+\emph{How many tiles will be black after 100 days?}
 }
 \examples{
 flip_hex_tiles(example_hex_tiles())
-f24b()
 }
