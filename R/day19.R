@@ -197,12 +197,14 @@
 #'
 #' @param x some data
 #' @return For Part One, `check_messages(x)` returns whether each message
-#'   matches the rules. For Part Two, `f19b(x)` returns ....
+#'   matches the rules. For Part Two, `check_recursive_messages(x)` returns
+#'   whether each message match the recursive rules.
 #' @export
 #' @examples
 #' check_messages(example_message(2))
+#' check_messages(example_message(3))
+#' check_recursive_messages(example_message(3))
 check_messages <- function(x) {
-  # x <- example_message(2)
   x <- x %>% stringr::str_remove_all("\"")
   # i.e., everything until 1 before the "" element
   rules <- x[seq_len(which(x == "") - 1)]
@@ -219,6 +221,7 @@ check_messages <- function(x) {
     stringr::str_remove_all("\\d+:") %>%
     stringr::str_replace_all("$", " ") %>%
     stringr::str_replace_all("( .+ [|] .+ )", " (\\1) ") %>%
+    stringr::str_replace_all("\\\"", "") %>%
     stats::setNames(names)
 
   # We use the named vector feature of stringr::str_replace_all() which replaces
@@ -237,8 +240,31 @@ check_messages <- function(x) {
 }
 
 
-check_messages_scratch <- function(x) {
-  x <- readLines("./inst/input19.txt")
+#' @rdname day19
+#' @export
+check_recursive_messages <- function(x) {
+  check_rules <- function(message, rules) {
+    full_rules <- expand_rules(rules)
+    pattern <- full_rules[" 0 "] %>%
+      stringr::str_remove_all(" ") %>%
+      paste0("^", ., "$")
+    stringr::str_detect(message, pattern)
+  }
+
+  expand_rules <- function(rules) {
+    while (stringr::str_detect(rules[" 0 "], "\\d")) {
+      rules <- rules %>%
+        stringr::str_replace_all(rules) %>%
+        stats::setNames(names)
+    }
+    rules
+  }
+
+  expand_11 <- function(rules) {
+    rules[" 11 "] <- paste0(" 42", rules[" 11 "], "31 ")
+    rules
+  }
+
   x <- x %>% stringr::str_remove_all("\"")
   # i.e., everything until 1 before the "" element
   rules <- x[seq_len(which(x == "") - 1)]
@@ -255,42 +281,43 @@ check_messages_scratch <- function(x) {
     stringr::str_remove_all("\\d+:") %>%
     stringr::str_replace_all("$", " ") %>%
     stringr::str_replace_all("( .+ [|] .+ )", " (\\1) ") %>%
+    stringr::str_replace_all("\\\"", "") %>%
     stats::setNames(names)
-  # 8: 42 | 42 8
-  # 11: 42 31 | 42 11 31
 
-  # A single pass to expand 8?
-  rewrites1 <- rewrites
-  while (stringr::str_detect(rewrites1[" 8 "], "\\d")) {
-    rewrites1 <- rewrites1 %>%
-      stringr::str_replace_all(rewrites1) %>%
-      stats::setNames(names)
+  # Rules 8 and 11 are recursive patterns. Rule 8 is just linear repetition so
+  # it is easily accommodated by regular expressions. Rule 11 is harder because
+  # two parts are being repeated the same number of times, so we cannot use
+  # regular expressions. We will just check all the possible expansions of
+  # rule 11.
+
+  # The expansion of rule 8 is accommodated by regular expressions.
+  rewrites[" 8 "] <- " ( 42 )+ "
+
+  # Eliminate the ones that pass the rules before expanding rule 11.
+  leftover <- tests[! check_rules(tests, rewrites)]
+
+  # Each expansion of rule 11 will increase the width by n characters, so we
+  # expand rule 11 and check the rules until a match would exceed the longest
+  # message length.
+  expanded <- expand_rules(rewrites)
+
+  length11 <- tests %>%
+    stringr::str_extract(
+      expanded[" 11 "] %>% stringr::str_remove_all(" ")
+    ) %>%
+    nchar() %>%
+    max()
+
+  max_expansions <- max(nchar(tests)) %/% length11
+
+  tick <- 1
+  while (tick <= max_expansions) {
+    rewrites <- expand_11(rewrites)
+    leftover <- leftover[! check_rules(leftover, rewrites)]
+    tick <- tick + 1
   }
-  rewrites[" 8 "] <- rewrites1[" 8 "] %>%
-    stringr::str_remove_all(" ") %>%
-    paste0(" ", ., "* ")
 
-  # Then plug in the expanded 8 and?
-  # stringr::str_detect(tests, rewrites1[" 8 "])
-  # rewrites[" 8 "] <- " ( 42 )+ "
-  # rewrites[" 42 "]
-  # rewrites[" 31 "]
-  # rewrites[" 11 "] <- " ( 42 (?R)? 31 ) "
-
-  # We use the named vector feature of stringr::str_replace_all() which replaces
-  # the patterns in each name with the values.
-
-  while (stringr::str_detect(rewrites[" 0 "], "\\d")) {
-    rewrites <- rewrites %>%
-      stringr::str_replace_all(rewrites) %>%
-      stats::setNames(names)
-  }
-
-  pattern <- rewrites[" 0 "] %>%
-    stringr::str_remove_all(" ") %>%
-    paste0("^", ., "$")
-
-  # sum(grepl(pattern, x), perl = TRUE)
+  !(tests %in% leftover)
 }
 
 
@@ -322,6 +349,55 @@ example_message <- function(example = 1) {
       'abbbab',
       'aaabbb',
       'aaaabbb'
+    ),
+    b1 = c(
+      "42: 9 14 | 10 1",
+      "9: 14 27 | 1 26",
+      "10: 23 14 | 28 1",
+      '1: "a"',
+      "11: 42 31",
+      "5: 1 14 | 15 1",
+      "19: 14 1 | 14 14",
+      "12: 24 14 | 19 1",
+      "16: 15 1 | 14 14",
+      "31: 14 17 | 1 13",
+      "6: 14 14 | 1 14",
+      "2: 1 24 | 14 4",
+      "0: 8 11",
+      "13: 14 3 | 1 12",
+      "15: 1 | 14",
+      "17: 14 2 | 1 7",
+      "23: 25 1 | 22 14",
+      "28: 16 1",
+      "4: 1 1",
+      "20: 14 14 | 1 15",
+      "3: 5 14 | 16 1",
+      "27: 1 6 | 14 18",
+      '14: "b"',
+      "21: 14 1 | 1 14",
+      "25: 1 1 | 1 14",
+      "22: 14 14",
+      "8: 42",
+      "26: 14 22 | 1 20",
+      "18: 15 15",
+      "7: 14 5 | 1 21",
+      "24: 14 1",
+      "",
+      "abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa",
+      "bbabbbbaabaabba",
+      "babbbbaabbbbbabbbbbbaabaaabaaa",
+      "aaabbbbbbaaaabaababaabababbabaaabbababababaaa",
+      "bbbbbbbaaaabbbbaaabbabaaa",
+      "bbbababbbbaaaaaaaabbababaaababaabab",
+      "ababaaaaaabaaab",
+      "ababaaaaabbbaba",
+      "baabbaaaabbaaaababbaababb",
+      "abbbbabbbbaaaababbbbbbaaaababb",
+      "aaaaabbaabaaaaababaa",
+      "aaaabbaaaabbaaa",
+      "aaaabbaabbaaaaaaabbbabbbaaabbaabaaa",
+      "babaaabbbaaabaababbaabababaaab",
+      "aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba"
     )
   )
   l[[example]]

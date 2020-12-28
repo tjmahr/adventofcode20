@@ -118,7 +118,8 @@ puzzles.
 -   17a/b *A 3D Game of Life-like simulation:* Table joins.
 -   18a/b *Different mathematical precedence rules:* Rewriting and
     evaluating code. S3 classes for method dispatch.
--   19a/b
+-   19a/b *Counting how many message match a set of rules and
+    recursively defined rules:* Regular expressions.
 -   20a/b
 -   21a/b *Deducing which values goes together by process of
     elimination:* Logical resolution (making an inference and adding the
@@ -130,6 +131,8 @@ puzzles.
 -   23b
 -   24a *Walking along a hexagonal grid:* Lookup tables.
 -   24b
+-   25a *Public key cryptography:* Math.
+-   25b
 
 By “book-keeping”, I mean basic programming where I keep track of some
 changing state like a position in a vector.

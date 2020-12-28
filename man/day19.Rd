@@ -3,10 +3,13 @@
 \name{day19}
 \alias{day19}
 \alias{check_messages}
+\alias{check_recursive_messages}
 \alias{example_message}
 \title{Day 19: Monster Messages}
 \usage{
 check_messages(x)
+
+check_recursive_messages(x)
 
 example_message(example = 1)
 }
@@ -18,7 +21,8 @@ example_message(example = 1)
 }
 \value{
 For Part One, \code{check_messages(x)} returns whether each message
-matches the rules. For Part Two, \code{f19b(x)} returns ....
+matches the rules. For Part Two, \code{check_recursive_messages(x)} returns
+whether each message match the recursive rules.
 }
 \description{
 \href{https://adventofcode.com/2020/day/19}{Monster Messages}
@@ -210,4 +214,6 @@ rule \code{0}?}
 }
 \examples{
 check_messages(example_message(2))
+check_messages(example_message(3))
+check_recursive_messages(example_message(3))
 }
